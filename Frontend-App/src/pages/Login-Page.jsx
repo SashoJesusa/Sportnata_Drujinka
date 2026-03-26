@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios' // Добавено
 import '../styles/LoginPage.css'
 
 export default function LoginPage() {
@@ -11,72 +12,62 @@ export default function LoginPage() {
   const [successMsg, setSuccessMsg] = useState('')
 
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target
     setLoginData({ ...loginData, [name]: value })
-    if (errors.login) setErrors({ ...errors, login: '' })
+    if (errors.general) setErrors({ ...errors, general: '' })
   }
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target
     setRegisterData({ ...registerData, [name]: value })
-    if (errors[name]) setErrors({ ...errors, [name]: '' })
+    if (errors[name] || errors.general) setErrors({ ...errors, [name]: '', general: '' })
   }
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     const newErrors = {}
+    if (!validateEmail(loginData.email)) newErrors.email = 'Невалиден имейл'
+    if (!loginData.password) newErrors.password = 'Паролата е задължителна'
 
-    if (!loginData.email.trim()) {
-      newErrors.email = 'Имейлът е задължителен'
-    } else if (!validateEmail(loginData.email)) {
-      newErrors.email = 'Моля, въведи валиден имейл'
+    if (Object.keys(newErrors).length > 0) return setErrors(newErrors)
+
+    try {
+      const res = await axios.post('http://localhost:4000/login', loginData)
+      if (res.data.success) {
+        setSuccessMsg('✅ Успешен вход! Пренасочване...')
+        setTimeout(() => navigate('/home'), 500)
+      }
+    } catch (err) {
+      setErrors({ general: err.response?.data?.error || 'Грешка при вход' })
     }
-
-    if (!loginData.password.trim()) {
-      newErrors.password = 'Паролата е задължителна'
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setSuccessMsg('✅ Успешен вход! Пренасочване...')
-    setTimeout(() => navigate('/home'), 1500)
   }
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
     const newErrors = {}
+    if (!registerData.name.trim()) newErrors.name = 'Името е задължително'
+    if (!validateEmail(registerData.email)) newErrors.email = 'Невалиден имейл'
+    if (registerData.password.length < 8) newErrors.password = 'Минимум 8 символа'
 
-    if (!registerData.name.trim()) {
-      newErrors.name = 'Пълното име е задължително'
+    if (Object.keys(newErrors).length > 0) return setErrors(newErrors)
+
+    try {
+      const res = await axios.post('http://localhost:4000/register', {
+        username: registerData.name,
+        email: registerData.email,
+        password: registerData.password
+      })
+      if (res.data.success) {
+        setSuccessMsg('✅ Регистрацията е успешна! Пренасочване...')
+        setTimeout(() => navigate('/home'), 1500)
+      }
+    } catch (err) {
+      setErrors({ general: err.response?.data?.error || 'Грешка при регистрация' })
     }
-
-    if (!registerData.email.trim()) {
-      newErrors.email = 'Имейлът е задължителен'
-    } else if (!validateEmail(registerData.email)) {
-      newErrors.email = 'Моля, въведи валиден имейл'
-    }
-
-    if (!registerData.password.trim()) {
-      newErrors.password = 'Паролата е задължителна'
-    } else if (registerData.password.length < 8) {
-      newErrors.password = 'Паролата трябва да е минимум 8 символа'
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setSuccessMsg('✅ Регистрацията е успешна! Пренасочване...')
-    setTimeout(() => navigate('/home'), 1500)
   }
 
   return (
@@ -95,31 +86,18 @@ export default function LoginPage() {
         </div>
 
         {successMsg && <div className="success-message">{successMsg}</div>}
+        {errors.general && <div className="error-message" style={{textAlign:'center', marginBottom: '10px'}}>{errors.general}</div>}
 
         {tab === 'login' ? (
           <form onSubmit={handleLogin}>
             <div className="form-group">
               <label className="form-label">Имейл <span className="required">*</span></label>
-              <input
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                type="email"
-                name="email"
-                placeholder="ivan@example.com"
-                value={loginData.email}
-                onChange={handleLoginChange}
-              />
+              <input className={`form-input ${errors.email ? 'error' : ''}`} type="email" name="email" value={loginData.email} onChange={handleLoginChange} />
               {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Парола <span className="required">*</span></label>
-              <input
-                className={`form-input ${errors.password ? 'error' : ''}`}
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                value={loginData.password}
-                onChange={handleLoginChange}
-              />
+              <input className={`form-input ${errors.password ? 'error' : ''}`} type="password" name="password" value={loginData.password} onChange={handleLoginChange} />
               {errors.password && <span className="error-message">{errors.password}</span>}
             </div>
             <button type="submit" className="btn-submit">Влез в акаунта</button>
@@ -128,44 +106,22 @@ export default function LoginPage() {
           <form onSubmit={handleRegister}>
             <div className="form-group">
               <label className="form-label">Пълно име <span className="required">*</span></label>
-              <input
-                className={`form-input ${errors.name ? 'error' : ''}`}
-                type="text"
-                name="name"
-                placeholder="Иван Петров"
-                value={registerData.name}
-                onChange={handleRegisterChange}
-              />
+              <input className={`form-input ${errors.name ? 'error' : ''}`} type="text" name="name" value={registerData.name} onChange={handleRegisterChange} />
               {errors.name && <span className="error-message">{errors.name}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Имейл <span className="required">*</span></label>
-              <input
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                type="email"
-                name="email"
-                placeholder="ivan@example.com"
-                value={registerData.email}
-                onChange={handleRegisterChange}
-              />
+              <input className={`form-input ${errors.email ? 'error' : ''}`} type="email" name="email" value={registerData.email} onChange={handleRegisterChange} />
               {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Парола <span className="required">*</span></label>
-              <input
-                className={`form-input ${errors.password ? 'error' : ''}`}
-                type="password"
-                name="password"
-                placeholder="Мин. 8 символа"
-                value={registerData.password}
-                onChange={handleRegisterChange}
-              />
+              <input className={`form-input ${errors.password ? 'error' : ''}`} type="password" name="password" value={registerData.password} onChange={handleRegisterChange} />
               {errors.password && <span className="error-message">{errors.password}</span>}
             </div>
             <button type="submit" className="btn-submit">Създай акаунт</button>
           </form>
         )}
-
         <a href="#" onClick={(e) => { e.preventDefault(); navigate('/home') }} className="back-to-site-link">← Обратно към сайта</a>
       </div>
     </div>

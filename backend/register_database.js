@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-
-// МНОГО ВАЖНО: CORS трябва да е тук, за да позволи на React (порт 5173) да говори с Node (порт 4000)
 app.use(cors()); 
 app.use(express.json());
 
@@ -15,25 +13,43 @@ const supabase = createClient(
     process.env.SUPABASE_KEY || 'sb_publishable_Bdeh-WGPcKAETVdBJ5DSzg_axWtQ2LH'
 );
 
+// --- РЕГИСТРАЦИЯ ---
 app.post('/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
-
-        // Хеширане
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Запис в Supabase
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('profiles')
-            .insert([{ username, email, password: hashedPassword }]);
+            .insert([{ username, email, password: hashedPassword }])
+            .select();
 
-        if (error) throw error;
-
-        res.status(201).json({ success: true, message: "Успешна регистрация!" });
+        if (error) return res.status(400).json({ error: error.message });
+        res.status(201).json({ success: true });
     } catch (err) {
-        console.error(err);
-        res.status(400).json({ error: err.message });
+        res.status(500).json({ error: "Грешка в сървъра" });
     }
 });
 
-app.listen(4000, () => console.log("🚀 Бекендът работи на порт 4000"));
+// --- ВХОД ---
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const { data: user, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+        if (error || !user) return res.status(401).json({ error: "Грешен имейл или парола" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(401).json({ error: "Грешен имейл или парола" });
+
+        res.json({ success: true, user: { username: user.username } });
+    } catch (err) {
+        res.status(500).json({ error: "Грешка при вход" });
+    }
+});
+
+app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
