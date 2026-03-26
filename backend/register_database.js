@@ -45,11 +45,16 @@ app.post('/login', async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ error: "Грешен имейл или парола" });
-
-        res.json({ success: true, user: { username: user.username } });
+        console.log(user);
+         const { data: sessionData } = await supabase
+            .from('sessions')
+            .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
+            .select();
+            console.log(sessionData);
+        res.json({ success: true, user: { username: user.username, session_id: sessionData.session_id } });
     } catch (err) {
         res.status(500).json({ error: "Грешка при вход" });
     }
 });
 
-app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
+app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
