@@ -87,6 +87,15 @@
   border-color: #15803d;
 }
 
+.form-input.error {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.form-input.error:focus {
+  border-color: #dc2626;
+}
+
 .btn-submit {
   width: 100%;
   background: #15803d;
@@ -117,6 +126,32 @@
 
 .back-to-site-link:hover {
   color: #15803d;
+}
+
+.required {
+  color: #dc2626;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.success-message {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #15803d;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 600;
 }
 
 @media (max-width: 480px) {
