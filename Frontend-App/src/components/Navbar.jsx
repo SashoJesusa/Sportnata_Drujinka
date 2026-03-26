@@ -1,34 +1,59 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import './Navbar.css'
 
 export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const path = location.pathname
-  const [user, setUser] = useState(null)
+  const hash = location.hash
+  const savedUser = localStorage.getItem('user')
+  const sessionId = localStorage.getItem('sessionId')
+  let user = null
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user')
-    const sessionId = localStorage.getItem('sessionId')
-    
-    // Only set user if BOTH user and sessionId exist
-    if (savedUser && sessionId) {
-      setUser(JSON.parse(savedUser))
-    } else {
-      // Clear any partial/invalid data
+  if (savedUser && sessionId) {
+    try {
+      user = JSON.parse(savedUser)
+    } catch {
       localStorage.removeItem('user')
       localStorage.removeItem('sessionId')
-      setUser(null)
     }
-  }, [location])
+  } else if (savedUser || sessionId) {
+    localStorage.removeItem('user')
+    localStorage.removeItem('sessionId')
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('user')
     localStorage.removeItem('sessionId')
-    setUser(null)
     navigate('/home')
   }
+
+  const handleAboutClick = (e) => {
+    e.preventDefault()
+
+    if (path !== '/home') {
+      navigate('/home#site-footer')
+      return
+    }
+
+    const footer = document.getElementById('site-footer')
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleHomeClick = (e) => {
+    if (path === '/home') {
+      e.preventDefault()
+      if (hash) {
+        navigate('/home', { replace: true })
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  const isHomeActive = path === '/home' && hash !== '#site-footer'
+  const isAboutActive = path === '/home' && hash === '#site-footer'
 
   return (
     <header className="header">
@@ -52,9 +77,9 @@ export default function Navbar() {
           <span className="brand-name">AgroHub</span>
         </Link>
         <div className="navbar-links">
-          <Link to="/home" className={`nav-link ${path === '/home' ? 'active' : ''}`}>Начало</Link>
+          <Link to="/home" onClick={handleHomeClick} className={`nav-link ${isHomeActive ? 'active' : ''}`}>Начало</Link>
           <Link to="/community" className={`nav-link ${path === '/community' ? 'active' : ''}`}>Форум</Link>
-          <Link to="/home" className="nav-link">За Нас</Link>
+          <Link to="/home#site-footer" className={`nav-link ${isAboutActive ? 'active' : ''}`} onClick={handleAboutClick}>За Нас</Link>
         </div>
         <Link to="/add-product" className="btn-sell">Публикувай Обява</Link>
       </nav>

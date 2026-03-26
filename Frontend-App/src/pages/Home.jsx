@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import mockProducts from '../data/mockProducts'
@@ -8,12 +8,22 @@ import '../styles/Home.css'
 const CATEGORIES = ['Всички', 'Зеленчуци', 'Плодове', 'Млечни', 'Пчелни продукти', 'Птицевъдство', 'Напитки']
 
 export default function Home() {
+  const location = useLocation()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Всички')
   const [contactProduct, setContactProduct] = useState(null)
   const [toast, setToast] = useState(null)
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
+
+  useEffect(() => {
+    if (location.hash === '#site-footer') {
+      const footer = document.getElementById('site-footer')
+      if (footer) {
+        setTimeout(() => footer.scrollIntoView({ behavior: 'smooth' }), 0)
+      }
+    }
+  }, [location.hash])
 
   const filtered = mockProducts.filter(p => {
     const matchSearch =
@@ -45,10 +55,10 @@ export default function Home() {
       {/* CATEGORY CARDS */}
       <section className="cat-cards-section">
         {[
-          { label: 'Земеделска Техника', img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80', cat: 'Друго' },
-          { label: 'Животни', img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=300&q=80', cat: 'Птицевъдство' },
-          { label: 'Местна Продукция', img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=300&q=80', cat: 'Плодове' },
-          { label: 'Семена и Торове', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&q=80', cat: 'Зеленчуци' },
+          { label: 'Местна Продукция', img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80', cat: 'Пчелни продукти' },
+          { label: 'Млечни продукти', img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=300&q=80', cat: 'Млечни' },
+          { label: 'Плодове', img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=300&q=80', cat: 'Плодове' },
+          { label: 'Зеленчуци', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&q=80', cat: 'Зеленчуци' },
         ].map(c => (
           <div key={c.label} className="cat-card" onClick={() => setCategory(c.cat)}>
             <img src={c.img} alt={c.label} className="cat-card-img" />
@@ -88,7 +98,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="footer">
+      <footer className="footer" id="site-footer">
         <div className="footer-grid">
           <div>
             <div className="footer-brand">🌾 AgroHub</div>
