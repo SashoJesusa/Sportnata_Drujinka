@@ -51,7 +51,7 @@ app.post('/login', async (req, res) => {
             .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
             .select();
             console.log(sessionData);
-        res.json({ success: true, user: { username: user.username, session_id: sessionData.session_id } });
+        res.json({ success: true, user: { username: user.user_id, session_id: sessionData.session_id } });
     } catch (err) {
         res.status(500).json({ error: "Грешка при вход" });
     }
