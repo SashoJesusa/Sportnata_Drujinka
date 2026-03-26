@@ -1,104 +1,165 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import axios from 'axios'
-import '../styles/AddProduct.css'
+import { useState } from "react";
+import "../styles/AddProduct.css";
+
+const OBLASTI = [
+  "Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", 
+  "Габрово", "Добрич", "Кърджали", "Кюстендил", "Ловеч", "Монтана", 
+  "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", 
+  "Силистра", "Сливен", "Смолян", "София (град)", "Софийска област", 
+  "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"
+];
+
+const CATEGORY_OPTIONS = [
+  "Зеленчуци", "Плодове", "Зърнени храни", "Животновъдство",
+  "Мляко и млечни продукти", "Мед и пчелни продукти",
+  "Билки и подправки", "Яйца", "Друго",
+];
+
+const INITIAL_STATE = {
+  name: "",
+  category: "",
+  price: "",
+  oblast: "",
+  description: "",
+};
 
 export default function AddProduct() {
-  const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', category: '', price: '', unit: 'кг', village: '', description: '', phone: '' })
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  
-  useEffect(() => {
-    const user = localStorage.getItem('user')
-    const sessionId = localStorage.getItem('sessionId')
-    
-    if (!user || !sessionId) {
-      navigate('/login')
-    } else {
-      setLoading(false)
-    }
-  }, [navigate])
-  
-  const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
-  
-  const submit = async e => { 
-    e.preventDefault()
-    setSubmitting(true)
-    try {
-      const sessionId = localStorage.getItem('sessionId')
-      await axios.post('http://localhost:4000/add-product', {
-        ...form,
-        sessionId: sessionId
-      })
-      alert('Обявата е публикувана! 🎉')
-      navigate('/home')
-    } catch (err) {
-      alert('Грешка при публикуване на обявата')
-    }
-    setSubmitting(false)
-  }
+  const [form, setForm] = useState(INITIAL_STATE);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
-  if (loading) return <div><Navbar /></div>
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleReset = () => {
+    if (window.confirm("Сигурни ли сте, че искате да изчистите формата?")) {
+      setForm(INITIAL_STATE);
+      setImageFile(null);
+      setImagePreview("");
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setImageFile(null);
+      setImagePreview("");
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Изпратени данни:", { ...form, imageName: imageFile?.name || null });
+    alert("Обявата е добавена успешно!");
+  };
 
   return (
-    <div className="add-product-container">
-      <Navbar />
-      <div className="add-product-wrapper">
-        <div className="add-product-header">
-          <h1>📦 Добави продукт</h1>
-          <p>Публикувай своята обява и намери купувачи директно</p>
-        </div>
-        <div className="add-product-form-container">
-          <form onSubmit={submit}>
-            <div className="form-group">
-              <label>Наименование</label>
-              <input className="form-input" name="name" placeholder="напр. Пресни домати" value={form.name} onChange={handle} required />
-            </div>
-
-            <div className="form-group">
-              <label>Категория</label>
-              <select className="form-select" name="category" value={form.category} onChange={handle} required>
-                <option value="">-- Избери категория --</option>
-                {['Зеленчуци','Плодове','Млечни','Пчелни продукти','Птицевъдство','Напитки','Друго'].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Цена (лв)</label>
-                <input className="form-input" name="price" type="number" min="0" step="0.01" placeholder="0.00" value={form.price} onChange={handle} required />
-              </div>
-              <div className="form-group">
-                <label>Единица</label>
-                <select className="form-select" name="unit" value={form.unit} onChange={handle}>
-                  {['кг','бр','л','г'].map(u => <option key={u}>{u}</option>)}
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Село / Град</label>
-              <input className="form-input" name="village" placeholder="напр. с. Розово" value={form.village} onChange={handle} required />
-            </div>
-
-            <div className="form-group">
-              <label>Телефон</label>
-              <input className="form-input" name="phone" placeholder="+359 88 XXX XXXX" value={form.phone} onChange={handle} />
-            </div>
-
-            <div className="form-group">
-              <label>Описание</label>
-              <textarea className="form-textarea" name="description" rows={4} placeholder="Опиши своя продукт..." value={form.description} onChange={handle} />
-            </div>
-
-            <button type="submit" className="btn-submit" disabled={submitting}>
-              {submitting ? '⏳ Публикуване...' : '🌱 Публикувай обявата'}
-            </button>
-          </form>
+    <div className="ap-page">
+      <div className="ap-header">
+        <span className="ap-header-icon">🌾</span>
+        <div>
+          <h1 className="ap-title">Добави продукт</h1>
+          <p className="ap-subtitle">Попълнете формата, за да предложите своята продукция</p>
         </div>
       </div>
+
+      <form className="ap-form" onSubmit={handleSubmit}>
+        <div className="ap-field">
+          <label className="ap-label">Наименование</label>
+          <input 
+            className="ap-input" 
+            name="name" 
+            value={form.name} 
+            onChange={handleChange} 
+            placeholder="напр. Домати сорт Розова магия" 
+            required 
+          />
+        </div>
+
+        <div className="ap-field">
+          <label className="ap-label">Категория</label>
+          <select className="ap-select" name="category" value={form.category} onChange={handleChange} required>
+            <option value="">– Избери категория –</option>
+            {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+
+        <div className="ap-field">
+          <label className="ap-label">Цена (€)</label>
+          <input 
+            className="ap-input" 
+            name="price" 
+            type="number" 
+            min="0" 
+            step="0.01" 
+            value={form.price} 
+            onChange={handleChange} 
+            placeholder="0.00" 
+            required 
+          />
+        </div>
+
+        <div className="ap-field">
+          <label className="ap-label">📍 Област</label>
+          <select 
+            className="ap-select" 
+            name="oblast" 
+            value={form.oblast} 
+            onChange={handleChange} 
+            required
+          >
+            <option value="">– Избери местоположение –</option>
+            {OBLASTI.map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="ap-field">
+          <label className="ap-label">Снимка на продукта</label>
+          <label className="ap-upload-box">
+            <input
+              className="ap-file-input"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            <span className="ap-upload-text">📷 Качи снимка (JPG, PNG, WEBP)</span>
+          </label>
+          {imageFile && <p className="ap-file-name">Избрана снимка: {imageFile.name}</p>}
+          {imagePreview && (
+            <div className="ap-preview-wrap">
+              <img src={imagePreview} alt="Преглед на продукта" className="ap-preview-image" />
+            </div>
+          )}
+        </div>
+
+        <div className="ap-field">
+          <label className="ap-label">Описание</label>
+          <textarea 
+            className="ap-textarea" 
+            name="description" 
+            value={form.description} 
+            onChange={handleChange} 
+            placeholder="Опишете продукта..." 
+            rows={5} 
+          />
+        </div>
+
+        <div className="ap-actions">
+          <button type="button" className="ap-btn-secondary" onClick={handleReset}>
+            Изчисти
+          </button>
+          <button type="submit" className="ap-submit">
+            <span>🌿</span> Публикувай
+          </button>
+        </div>
+      </form>
     </div>
-  )
+  );
 }
