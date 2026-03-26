@@ -1,13 +1,46 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import axios from 'axios'
 import '../styles/AddProduct.css'
 
 export default function AddProduct() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ name: '', category: '', price: '', unit: 'кг', village: '', description: '', phone: '' })
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    const sessionId = localStorage.getItem('sessionId')
+    
+    if (!user || !sessionId) {
+      navigate('/login')
+    } else {
+      setLoading(false)
+    }
+  }, [navigate])
+  
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
-  const submit = e => { e.preventDefault(); alert('Обявата е публикувана! 🎉'); navigate('/home') }
+  
+  const submit = async e => { 
+    e.preventDefault()
+    setSubmitting(true)
+    try {
+      const sessionId = localStorage.getItem('sessionId')
+      await axios.post('http://localhost:4000/add-product', {
+        ...form,
+        sessionId: sessionId
+      })
+      alert('Обявата е публикувана! 🎉')
+      navigate('/home')
+    } catch (err) {
+      alert('Грешка при публикуване на обявата')
+    }
+    setSubmitting(false)
+  }
+
+  if (loading) return <div><Navbar /></div>
 
   return (
     <div className="add-product-container">
@@ -60,8 +93,8 @@ export default function AddProduct() {
               <textarea className="form-textarea" name="description" rows={4} placeholder="Опиши своя продукт..." value={form.description} onChange={handle} />
             </div>
 
-            <button type="submit" className="btn-submit">
-              🌱 Публикувай обявата
+            <button type="submit" className="btn-submit" disabled={submitting}>
+              {submitting ? '⏳ Публикуване...' : '🌱 Публикувай обявата'}
             </button>
           </form>
         </div>

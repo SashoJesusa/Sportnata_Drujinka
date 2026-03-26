@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import mockProducts from '../data/mockProducts'
@@ -8,12 +8,22 @@ import '../styles/Home.css'
 const CATEGORIES = ['Всички', 'Зеленчуци', 'Плодове', 'Млечни', 'Пчелни продукти', 'Птицевъдство', 'Напитки']
 
 export default function Home() {
+  const location = useLocation()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Всички')
   const [contactProduct, setContactProduct] = useState(null)
   const [toast, setToast] = useState(null)
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
+
+  useEffect(() => {
+    if (location.hash === '#site-footer') {
+      const footer = document.getElementById('site-footer')
+      if (footer) {
+        setTimeout(() => footer.scrollIntoView({ behavior: 'smooth' }), 0)
+      }
+    }
+  }, [location.hash])
 
   const filtered = mockProducts.filter(p => {
     const matchSearch =
@@ -31,57 +41,28 @@ export default function Home() {
 
       {/* HERO */}
       <section className="hero">
-        <div className="hero-bg" />
+        <div className="hero-overlay" />
         <div className="hero-content">
-          <div className="hero-tag">🌱 Директно от фермата до вашата маса</div>
-          <h1 className="hero-title">
-            Малки фермери,<br />
-            <span className="hero-accent">голяма разлика</span>
-          </h1>
-          <p className="hero-subtitle">
-            Свежи продукти от малки български села — директно от производителя. Без посредници, без комисионни.
-          </p>
-          <div className="hero-buttons">
-            <Link to="/add-product" className="btn-primary-large">🚜 Стани продавач</Link>
-            <a href="#products" className="btn-outline-large">Разгледай продуктите ↓</a>
-          </div>
-          <div className="hero-stats">
-            {[['120+', 'Фермери'], ['800+', 'Продукта'], ['50+', 'Села'], ['4.9★', 'Оценка']].map(([n, l]) => (
-              <div className="stat" key={l}>
-                <span className="stat-num">{n}</span>
-                <span className="stat-label">{l}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="hero-visual">
-          <div className="hero-cards-stack">
-            {mockProducts.slice(0, 3).map((p, i) => (
-              <div className="mini-card" key={p.id} style={{ '--i': i }}>
-                <span style={{ fontSize: '28px' }}>{p.emoji}</span>
-                <div>
-                  <div className="mini-card-name">{p.name}</div>
-                  <div className="mini-card-village">{p.village}</div>
-                </div>
-                <div className="mini-card-price">{p.price.toFixed(2)} лв</div>
-              </div>
-            ))}
+          <h1 className="hero-title">Свежи продукти<br /><span className="hero-accent">директно от фермата</span></h1>
+          <p className="hero-subtitle">Намери местни земеделци и купи директно — без посредници.</p>
+          <div className="hero-search">
+            <input className="hero-search-input" placeholder="Търси фермерски продукти, техника..." value={search} onChange={e => setSearch(e.target.value)} />
+            <button className="hero-search-btn">🔍 Търси</button>
           </div>
         </div>
       </section>
 
-      {/* BENEFITS */}
-      <section className="benefits">
+      {/* CATEGORY CARDS */}
+      <section className="cat-cards-section">
         {[
-          { icon: '💰', title: 'Без комисионни', desc: '100% от приходите остават при фермера' },
-          { icon: '⚡', title: 'Бързо публикуване', desc: 'Обявата е онлайн за под 2 минути' },
-          { icon: '💬', title: 'Директен контакт', desc: 'Свържи се директно с купувача' },
-          { icon: '⭐', title: 'Рейтинг система', desc: 'Изгради доверие с честни отзиви' },
-        ].map(b => (
-          <div className="benefit-card" key={b.title}>
-            <div className="benefit-icon">{b.icon}</div>
-            <h3 className="benefit-title">{b.title}</h3>
-            <p className="benefit-desc">{b.desc}</p>
+          { label: 'Местна Продукция', img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80', cat: 'Пчелни продукти' },
+          { label: 'Млечни продукти', img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=300&q=80', cat: 'Млечни' },
+          { label: 'Плодове', img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=300&q=80', cat: 'Плодове' },
+          { label: 'Зеленчуци', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&q=80', cat: 'Зеленчуци' },
+        ].map(c => (
+          <div key={c.label} className="cat-card" onClick={() => setCategory(c.cat)}>
+            <img src={c.img} alt={c.label} className="cat-card-img" />
+            <div className="cat-card-label">{c.label}</div>
           </div>
         ))}
       </section>
@@ -96,10 +77,6 @@ export default function Home() {
           <Link to="/add-product" className="btn-add">+ Добави обява</Link>
         </div>
         <div className="filters">
-          <div className="search-wrap">
-            <span className="search-icon">🔍</span>
-            <input className="search-input" placeholder="Търси продукт, фермер или село..." value={search} onChange={e => setSearch(e.target.value)} />
-          </div>
           <div className="categories">
             {CATEGORIES.map(c => (
               <button key={c} className={`cat-btn ${category === c ? 'active' : ''}`} onClick={() => setCategory(c)}>{c}</button>
@@ -120,15 +97,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cta-section">
-        <h2 className="cta-title">Ти си малък фермер?<br /><span style={{ color: '#86efac' }}>Ние сме за теб.</span></h2>
-        <p className="cta-sub">Присъедини се към стотици фермери от малки села, които вече продават директно.</p>
-        <Link to="/add-product" className="btn-cta">🌱 Публикувай своя първи продукт — безплатно</Link>
-      </section>
-
       {/* FOOTER */}
-      <footer className="footer">
+      <footer className="footer" id="site-footer">
         <div className="footer-grid">
           <div>
             <div className="footer-brand">🌾 AgroHub</div>
