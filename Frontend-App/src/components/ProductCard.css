@@ -1,0 +1,118 @@
+.product-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44, 24, 16, 0.07);
+  border: 1px solid #ede8e0;
+  transition: transform 0.25s, box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(44, 24, 16, 0.13);
+}
+
+.card-image-link { display: block; text-decoration: none; }
+
+.card-image {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  padding: 32px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.card-emoji {
+  font-size: 60px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #15803d;
+  color: white;
+  font-family: 'Source Serif 4', serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.card-title-link { text-decoration: none; }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c1810;
+  margin: 0;
+  transition: color 0.2s;
+}
+
+.card-title-link:hover .card-title { color: #15803d; }
+
+.card-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #15803d;
+  white-space: nowrap;
+}
+
+.card-meta { font-family: 'Source Serif 4', serif; font-size: 13px; color: #78716c; margin: 0; }
+
+.card-rating { display: flex; align-items: center; gap: 5px; }
+
+.stars { color: #f59e0b; font-size: 13px; letter-spacing: 1px; }
+
+.rating-num { font-family: 'Source Serif 4', serif; font-size: 13px; font-weight: 600; color: #2c1810; }
+
+.rating-count { font-family: 'Source Serif 4', serif; font-size: 12px; color: #a8a29e; }
+
+.card-actions { display: flex; gap: 8px; margin-top: 4px; }
+
+.btn-details {
+  flex: 1;
+  background: #15803d;
+  color: white;
+  text-decoration: none;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-details:hover { background: #166534; }
+
+.btn-contact {
+  padding: 10px 14px;
+  border: 2px solid #ede8e0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.btn-contact:hover { border-color: #15803d; background: #f0fdf4; }
