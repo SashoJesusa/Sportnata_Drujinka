@@ -4,16 +4,21 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { createClient } = require('@supabase/supabase-js');
 
+
+
 const app = express();
 app.use(cors()); 
 app.use(express.json());
 
+// 2. Връзка със Supabase (Изтрих публичните ключове заради сигурността)
 const supabase = createClient(
-    process.env.SUPABASE_URL || 'https://ekprkexcxdblouybpnui.supabase.co', 
-    process.env.SUPABASE_KEY || 'sb_publishable_Bdeh-WGPcKAETVdBJ5DSzg_axWtQ2LH'
+    process.env.SUPABASE_URL, 
+    process.env.SUPABASE_KEY
 );
 
-// --- РЕГИСТРАЦИЯ ---
+// ==========================================
+// --- РЕГИСТРАЦИЯ (Код на колегата) ---
+// ==========================================
 app.post('/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -31,7 +36,9 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// --- ВХОД ---
+// ==========================================
+// --- ВХОД (Новият код на колегата) ---
+// ==========================================
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -51,5 +58,8 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ error: "Грешка при вход" });
     }
 });
+
+
+
 
 app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
