@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:wght@300;400;500;600&display=swap');
+
+.community-container { min-height: 100vh; background: #faf8f5; }
+
+.community-wrapper {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.community-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #2c1810;
+  margin: 0 0 4px;
+}
+
+.community-header p {
+  color: #7c6f64;
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  margin: 0;
+}
+
+.btn-new-post {
+  background: #15803d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-new-post:hover { background: #166534; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(21,128,61,0.3); }
+
+.community-categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.cat-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #ede8e0;
+  background: white;
+  color: #5c3d2e;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cat-btn:hover { border-color: #15803d; color: #15803d; }
+.cat-btn.active { background: #15803d; color: white; border-color: #15803d; }
+
+.posts-list { display: flex; flex-direction: column; gap: 16px; }
+
+.post-card {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #ede8e0;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(44,24,16,0.04);
+}
+
+.post-card:hover { box-shadow: 0 4px 16px rgba(44,24,16,0.08); transform: translateY(-2px); border-color: #d4c5b0; }
+
+.post-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+
+.post-avatar { font-size: 28px; }
+
+.post-meta { display: flex; flex-direction: column; flex: 1; }
+
+.post-author { font-family: 'Source Serif 4', serif; font-weight: 600; color: #2c1810; font-size: 14px; }
+
+.post-time { font-size: 12px; color: #9c8c7c; }
+
+.post-category-badge {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-family: 'Source Serif 4', serif;
+}
+
+.post-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  color: #2c1810;
+  margin: 0 0 8px;
+}
+
+.post-body {
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  color: #5c3d2e;
+  line-height: 1.6;
+  margin: 0 0 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-actions { display: flex; gap: 12px; }
+
+.action-btn {
+  background: #faf8f5;
+  border: 1px solid #ede8e0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  color: #5c3d2e;
+  transition: all 0.2s;
+}
+
+.action-btn:hover { border-color: #15803d; color: #15803d; }
+.action-btn.liked { background: #fff0f0; border-color: #fca5a5; color: #dc2626; }
+.action-btn.small { padding: 4px 10px; font-size: 12px; }
+
+.empty-community { text-align: center; padding: 60px 20px; color: #7c6f64; font-family: 'Source Serif 4', serif; }
+
+/* MODALS */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(44,24,16,0.35);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.modal-community {
+  background: white;
+  border-radius: 18px;
+  padding: 32px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(44,24,16,0.2);
+}
+
+.modal-close {
+  position: absolute; top: 16px; right: 18px;
+  background: #f0e6d6; border: none; border-radius: 50%;
+  width: 32px; height: 32px; font-size: 14px;
+  cursor: pointer; color: #5c3d2e;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.modal-close:hover { background: #ede8e0; }
+
+.modal-post-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+
+.modal-post-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: #2c1810;
+  margin: 0 0 10px;
+}
+
+.modal-post-body {
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  color: #5c3d2e;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.modal-like-row { margin-bottom: 20px; }
+
+.replies-section { border-top: 1px solid #ede8e0; padding-top: 20px; margin-bottom: 20px; }
+
+.replies-section h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: #2c1810;
+  margin: 0 0 16px;
+}
+
+.reply-card { display: flex; gap: 10px; margin-bottom: 14px; }
+
+.reply-content { flex: 1; }
+
+.reply-author { font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 13px; color: #2c1810; }
+
+.reply-text { font-family: 'Source Serif 4', serif; font-size: 14px; color: #5c3d2e; margin: 4px 0 6px; line-height: 1.5; }
+
+.no-replies { color: #9c8c7c; font-family: 'Source Serif 4', serif; font-size: 14px; text-align: center; padding: 16px 0; }
+
+.reply-input-section { border-top: 1px solid #ede8e0; padding-top: 16px; }
+
+.reply-textarea {
+  width: 100%;
+  border: 1.5px solid #ede8e0;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  color: #2c1810;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.reply-textarea:focus { outline: none; border-color: #15803d; }
+
+.btn-reply {
+  background: #15803d;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reply:hover { background: #166534; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; margin-bottom: 6px; font-weight: 600; }
+.form-input { width: 100%; border: 1.5px solid #ede8e0; border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; box-sizing: border-box; }
+.form-input:focus { outline: none; border-color: #15803d; }
+.form-select { width: 100%; border: 1.5px solid #ede8e0; border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; background: white; box-sizing: border-box; }
+.form-select:focus { outline: none; border-color: #15803d; }

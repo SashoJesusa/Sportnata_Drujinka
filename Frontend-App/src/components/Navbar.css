@@ -1,66 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:wght@300;400;500;600&display=swap');
 
+.header { position: sticky; top: 0; z-index: 200; }
+
+.header-top {
+  background: #1a1a2e;
+  color: #ccc;
+  font-size: 13px;
+  font-family: 'Source Serif 4', serif;
+  padding: 8px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-top-right { display: flex; align-items: center; gap: 16px; }
+
+.header-top-link {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+.header-top-link:hover { color: #fff; }
+
+.btn-login-top {
+  background: #15803d;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-family: 'Source Serif 4', serif;
+  transition: background 0.2s;
+}
+.btn-login-top:hover { background: #166534; }
+
 .navbar {
   background: #fff;
-  border-bottom: 1px solid #ede8e0;
+  border-bottom: 2px solid #e8f5e9;
   padding: 0 5%;
-  height: 68px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  box-shadow: 0 1px 8px rgba(44, 24, 16, 0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-
-.brand-icon { font-size: 26px; }
-
+.navbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand-icon { font-size: 30px; }
 .brand-name {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
-  color: #2c1810;
+  color: #15803d;
 }
 
-.navbar-links { display: flex; gap: 4px; }
+.navbar-links { display: flex; gap: 2px; }
 
 .nav-link {
-  color: #5c3d2e;
+  color: #374151;
   text-decoration: none;
   font-size: 15px;
   font-family: 'Source Serif 4', serif;
-  padding: 7px 16px;
+  padding: 8px 14px;
   border-radius: 8px;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav-link:hover, .nav-link.active {
-  background: #f0e6d6;
-  color: #2c1810;
-}
-
-.navbar-actions { display: flex; align-items: center; gap: 10px; }
-
-.btn-login {
-  color: #5c3d2e;
-  text-decoration: none;
-  font-family: 'Source Serif 4', serif;
-  font-size: 15px;
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: 2px solid #ede8e0;
   transition: all 0.2s;
+  font-weight: 500;
 }
-
-.btn-login:hover { border-color: #15803d; color: #15803d; }
+.nav-link:hover, .nav-link.active {
+  color: #15803d;
+  background: #f0fdf4;
+}
 
 .btn-sell {
   background: #15803d;
@@ -68,13 +78,14 @@
   text-decoration: none;
   font-family: 'Source Serif 4', serif;
   font-size: 15px;
-  padding: 9px 20px;
+  font-weight: 600;
+  padding: 10px 22px;
   border-radius: 8px;
   transition: all 0.2s;
+  white-space: nowrap;
 }
-
 .btn-sell:hover {
   background: #166534;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+  box-shadow: 0 4px 14px rgba(21,128,61,0.35);
 }
