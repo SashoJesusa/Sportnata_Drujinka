@@ -32,8 +32,29 @@
   font-size: 13px;
   font-family: 'Source Serif 4', serif;
   transition: background 0.2s;
+  border: none;
+  cursor: pointer;
 }
 .btn-login-top:hover { background: #166534; }
+
+.btn-logout-top {
+  background: #dc2626;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Source Serif 4', serif;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-logout-top:hover { background: #b91c1c; }
+
+.user-greeting {
+  color: #a8d5ba;
+  font-weight: 600;
+  font-size: 13px;
+}
 
 .navbar {
   background: #fff;

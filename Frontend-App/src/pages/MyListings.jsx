@@ -1,10 +1,30 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import mockProducts from '../data/mockProducts'
 import '../styles/MyListings.css'
 
 export default function MyListings() {
+  const navigate = useNavigate()
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
   const myProducts = mockProducts.slice(0, 3)
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    const sessionId = localStorage.getItem('sessionId')
+    
+    // If no user or sessionId, redirect to login
+    if (!savedUser || !sessionId) {
+      navigate('/login')
+      return
+    }
+    
+    setUser(JSON.parse(savedUser))
+    setLoading(false)
+  }, [navigate])
+
+  if (loading) return <div>Loading...</div>
   return (
     <div className="my-listings-container">
       <Navbar />

@@ -25,7 +25,18 @@ app.post('/register', async (req, res) => {
             .select();
 
         if (error) return res.status(400).json({ error: error.message });
-        res.status(201).json({ success: true });
+        
+        // Create session for new user
+        const { data: sessionData } = await supabase
+            .from('sessions')
+            .insert([{ user_id: data[0].user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
+            .select();
+        
+        res.status(201).json({ 
+            success: true, 
+            user: { username: data[0].username },
+            sessionId: sessionData ? sessionData[0].session_id : 'temp-session'
+        });
     } catch (err) {
         res.status(500).json({ error: "Грешка в сървъра" });
     }
@@ -51,7 +62,7 @@ app.post('/login', async (req, res) => {
             .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
             .select();
             console.log(sessionData);
-        res.json({ success: true, user: { username: user.username, session_id: sessionData.session_id } });
+        res.json({ success: true, user: { username: user.username, sessionId: sessionData[0].session_id } });
     } catch (err) {
         res.status(500).json({ error: "Грешка при вход" });
     }
