@@ -4,7 +4,30 @@ import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import '../styles/Home.css'
 
-const CATEGORIES = ['Всички', 'Зеленчуци', 'Плодове', 'Млечни', 'Пчелни продукти', 'Птицевъдство', 'Напитки']
+const CATEGORIES = [
+  'Всички',
+  'Зеленчуци',
+  'Плодове',
+  'Зърнени храни',
+  'Животновъдство',
+  'Мляко и млечни продукти',
+  'Мед и пчелни продукти',
+  'Билки и подправки',
+  'Яйца',
+  'Друго'
+]
+
+const CATEGORY_EMOJI = {
+  'Зеленчуци': '🥕',
+  'Плодове': '🍎',
+  'Зърнени храни': '🌾',
+  'Животновъдство': '🐄',
+  'Мляко и млечни продукти': '🧀',
+  'Мед и пчелни продукти': '🍯',
+  'Билки и подправки': '🌿',
+  'Яйца': '🥚',
+  'Друго': '📦',
+}
 
 export default function Home() {
   const location = useLocation()
@@ -12,6 +35,9 @@ export default function Home() {
   const [category, setCategory] = useState('Всички')
   const [contactProduct, setContactProduct] = useState(null)
   const [toast, setToast] = useState(null)
+  const [products, setProducts] = useState([])
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true)
+  const [productsError, setProductsError] = useState('')
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
 
@@ -23,6 +49,83 @@ export default function Home() {
       }
     }
   }, [location.hash])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setProductsError('')
+        const response = await fetch('http://localhost:4000/all-products')
+        const contentType = response.headers.get('content-type') || ''
+        const rawBody = await response.text()
+
+        if (!contentType.includes('application/json')) {
+          throw new Error('Сървърът не върна JSON. Провери дали backend е стартиран на порт 4000.')
+        }
+
+        let result
+        try {
+          result = JSON.parse(rawBody)
+        } catch {
+          throw new Error('Невалиден JSON от сървъра. Провери backend логовете.')
+        }
+
+        if (!response.ok || !result?.success) {
+          throw new Error(result?.error || 'Неуспешно зареждане на обявите.')
+        }
+
+        setProducts(Array.isArray(result.products) ? result.products : [])
+      } catch (err) {
+        setProductsError(err.message || 'Неуспешно зареждане на обявите.')
+      } finally {
+        setIsLoadingProducts(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  const normalizedProducts = products.map((p) => {
+    const resolvedId =
+      p.id ??
+      p.offer_id ??
+      p.product_id ??
+      p.productId ??
+      p.listing_id ??
+      p.ad_id ??
+      null
+
+    const normalizedCategory = p.category || 'Друго'
+    const fallbackName = p.product || p.name || 'Непознат продукт'
+    const fallbackFarmer = p.username || 'Локален производител'
+
+    return {
+      id: resolvedId,
+      name: fallbackName,
+      farmer: fallbackFarmer,
+      village: p.region || 'България',
+      price: Number(p.price) || 0,
+      unit: 'кг',
+      rating: 5,
+      reviews: 0,
+      emoji: CATEGORY_EMOJI[normalizedCategory] || '🌾',
+      category: normalizedCategory,
+      badge: 'Нова обява',
+      description: p.description || 'Свежа фермерска продукция.',
+      phone: p.phone || 'Свържете се чрез платформата',
+      imageUrl: p.image_url || null,
+    }
+  }).filter((p) => p.id !== null && p.id !== undefined)
+
+  const filtered = normalizedProducts.filter(p => {
+    const query = search.toLowerCase()
+    const matchSearch =
+      p.name.toLowerCase().includes(query) ||
+      p.farmer.toLowerCase().includes(query) ||
+      p.village.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query)
+    const matchCategory = category === 'Всички' || p.category === category
+    return matchSearch && matchCategory
+  })
 
 
   return (
@@ -74,7 +177,28 @@ export default function Home() {
             ))}
           </div>
         </div>
-        
+
+        {productsError && <div className="products-state products-error">⚠️ {productsError}</div>}
+
+        {!productsError && isLoadingProducts && (
+          <div className="products-state">Зареждане на обявите от базата...</div>
+        )}
+
+        {!productsError && !isLoadingProducts && (
+          <div className="products-grid">
+            {filtered.map(product => (
+              <ProductCard key={product.id} product={product} onContact={p => setContactProduct(p)} />
+            ))}
+
+            {filtered.length === 0 && (
+              <div className="empty-state">
+                <div style={{ fontSize: '52px', marginBottom: '16px' }}>🌾</div>
+                <p>Няма намерени продукти по тези филтри</p>
+                <button onClick={() => { setSearch(''); setCategory('Всички') }} className="btn-reset">Изчисти филтрите</button>
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* FOOTER */}

@@ -174,5 +174,32 @@ app.get('/all-products', async (req, res) => {
     }
 });
 
+app.get('/products/:id', async (req, res) => {
+    try {
+        const requestedId = Number(req.params.id);
+        if (Number.isNaN(requestedId)) {
+            return res.status(400).json({ success: false, error: 'Невалидно ID на продукт.' });
+        }
+
+        const { data: products, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('offer_id', requestedId)
+            .limit(1);
+
+        if (error) throw error;
+
+        const product = products?.[0] || null;
+        if (!product) {
+            return res.status(404).json({ success: false, error: 'Продуктът не е намерен.' });
+        }
+
+        res.status(200).json({ success: true, product });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, error: 'Грешка при извличане на продукта' });
+    }
+});
+
 
 app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));

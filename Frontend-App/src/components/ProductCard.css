@@ -21,6 +21,24 @@
   padding: 32px 20px;
   text-align: center;
   position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card-image.has-photo {
+  background: #f3f4f6;
+  padding: 0;
+}
+
+.card-photo {
+  width: 100%;
+  min-height: 180px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .card-emoji {

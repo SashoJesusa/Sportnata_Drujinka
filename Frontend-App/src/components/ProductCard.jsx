@@ -3,17 +3,24 @@ import './ProductCard.css'
 
 export default function ProductCard({ product, onContact }) {
   if (!product) return null
+  const productLink = `/products/${encodeURIComponent(String(product.id))}`
+  const hasImage = Boolean(product.imageUrl)
+
   return (
     <div className="product-card">
-      <Link to={`/products/${product.id}`} className="card-image-link">
-        <div className="card-image">
-          <span className="card-emoji">{product.emoji}</span>
+      <Link to={productLink} className="card-image-link">
+        <div className={`card-image ${hasImage ? 'has-photo' : ''}`}>
+          {hasImage ? (
+            <img src={product.imageUrl} alt={product.name} className="card-photo" />
+          ) : (
+            <span className="card-emoji">{product.emoji}</span>
+          )}
           {product.badge && <span className="card-badge">{product.badge}</span>}
         </div>
       </Link>
       <div className="card-body">
         <div className="card-header">
-          <Link to={`/products/${product.id}`} className="card-title-link">
+          <Link to={productLink} className="card-title-link">
             <h3 className="card-title">{product.name}</h3>
           </Link>
           <span className="card-price">{product.price.toFixed(2)} лв/{product.unit}</span>
@@ -25,7 +32,7 @@ export default function ProductCard({ product, onContact }) {
           <span className="rating-count">({product.reviews} отзива)</span>
         </div>
         <div className="card-actions">
-          <Link to={`/products/${product.id}`} className="btn-details">Виж детайли</Link>
+          <Link to={productLink} className="btn-details">Виж детайли</Link>
           <button className="btn-contact" onClick={() => onContact && onContact(product)}>💬</button>
         </div>
       </div>
