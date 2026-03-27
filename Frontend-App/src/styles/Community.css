@@ -35,6 +35,16 @@
   margin: 0;
 }
 
+.community-error {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
 .btn-new-post {
   background: #15803d;
   color: white;
