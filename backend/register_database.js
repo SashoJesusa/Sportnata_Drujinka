@@ -159,5 +159,20 @@ app.get('/my-products', async (req, res) => {
     }
 });
 
+app.get('/all-products', async (req, res) => {
+    try {
+        const { data: products, error } = await supabase
+            .from('products')
+            .select('*');
+
+        if (error) throw error;
+
+        res.status(200).json({ success: true, products });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при извличане на обявите" });
+    }
+});
+
 
 app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
