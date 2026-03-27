@@ -7,26 +7,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 
 const app = express();
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
-const corsOptions = {
-    origin(origin, callback) {
-        // Allow non-browser tools and same-origin requests with no Origin header.
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-
-        return callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
-};
-
-app.use(cors(corsOptions)); 
+app.use(cors()); 
 app.use(express.json());
 
 // 2. Връзка със Supabase (Изтрих публичните ключове заради сигурността)
