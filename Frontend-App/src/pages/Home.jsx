@@ -95,10 +95,10 @@ export default function Home() {
           </div>
           <div>
             <h4 className="footer-heading">Контакт</h4>
-            <p className="footer-contact">📧 info@agrohub.bg<br />📞 +359 XX XXX XXXX<br />🕐 Пон–Пет: 9:00–18:00</p>
+            <p className="footer-contact">📧 info@agrohub.bg<br />📞 +359 87 456 7898<br /></p>
           </div>
         </div>
-        <div className="footer-bottom">© 2024 AgroHub · Всички права запазени 🌾</div>
+        <div className="footer-bottom">© 2026 AgroHub · Всички права запазени 🌾</div>
       </footer>
 
       {/* CONTACT MODAL */}
