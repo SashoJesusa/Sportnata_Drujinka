@@ -96,7 +96,7 @@ export default function Home() {
 
     const normalizedCategory = p.category || 'Друго'
     const fallbackName = p.product || p.name || 'Непознат продукт'
-    const fallbackFarmer = p.username || 'Локален производител'
+    const fallbackFarmer = p.username || (p.user_id ? `Потребител #${p.user_id}` : 'Локален производител')
 
     return {
       id: resolvedId,

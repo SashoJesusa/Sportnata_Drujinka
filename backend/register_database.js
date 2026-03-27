@@ -16,6 +16,30 @@ const supabase = createClient(
     process.env.SUPABASE_KEY
 );
 
+async function attachUsernamesToProducts(products) {
+    if (!Array.isArray(products) || products.length === 0) return [];
+
+    const userIds = [...new Set(products.map((p) => p.user_id).filter((id) => id != null))];
+    if (userIds.length === 0) return products;
+
+    const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('user_id, username')
+        .in('user_id', userIds);
+
+    if (error) {
+        console.error('Profiles lookup error:', error);
+        return products;
+    }
+
+    const usernameByUserId = new Map((profiles || []).map((profile) => [profile.user_id, profile.username]));
+
+    return products.map((product) => ({
+        ...product,
+        username: usernameByUserId.get(product.user_id) || null,
+    }));
+}
+
 // ==========================================
 // --- РЕГИСТРАЦИЯ (Код на колегата) ---
 // ==========================================
@@ -152,7 +176,8 @@ app.get('/my-products', async (req, res) => {
 
         if (productError) throw productError;
 
-        res.status(200).json({ success: true, products });
+        const productsWithUsernames = await attachUsernamesToProducts(products || []);
+        res.status(200).json({ success: true, products: productsWithUsernames });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Грешка при извличане на обявите" });
@@ -167,7 +192,8 @@ app.get('/all-products', async (req, res) => {
 
         if (error) throw error;
 
-        res.status(200).json({ success: true, products });
+        const productsWithUsernames = await attachUsernamesToProducts(products || []);
+        res.status(200).json({ success: true, products: productsWithUsernames });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Грешка при извличане на обявите" });
@@ -194,7 +220,8 @@ app.get('/products/:id', async (req, res) => {
             return res.status(404).json({ success: false, error: 'Продуктът не е намерен.' });
         }
 
-        res.status(200).json({ success: true, product });
+        const [productWithUsername] = await attachUsernamesToProducts([product]);
+        res.status(200).json({ success: true, product: productWithUsername || product });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: 'Грешка при извличане на продукта' });

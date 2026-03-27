@@ -96,7 +96,7 @@ export default function ProductDetails() {
             <span className="product-badge">Нова обява</span>
             <h1 className="product-title">{product.product || product.name}</h1>
             <div className="product-price">{Number(product.price).toFixed(2)} лв / кг</div>
-            <p className="product-meta">👨‍🌾 <strong>{product.username || 'Локален производител'}</strong></p>
+            <p className="product-meta">👨‍🌾 <strong>{product.username || (product.user_id ? `Потребител #${product.user_id}` : 'Локален производител')}</strong></p>
             <p className="product-meta">📍 {product.region || 'България'}</p>
             <p className="product-meta">🏷️ {product.category}</p>
             <p className="product-meta">⭐ Нова обява</p>
