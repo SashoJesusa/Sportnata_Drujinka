@@ -38,7 +38,7 @@ export default function ProductCard({ product, onContact }) {
         </div>
         <div className="card-actions">
           <Link to={productLink} className="btn-details">Виж детайли</Link>
-          <button className="btn-contact" onClick={() => onContact && onContact(product)}>💬</button>
+          
         </div>
       </div>
     </div>
