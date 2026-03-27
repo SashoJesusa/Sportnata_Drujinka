@@ -105,9 +105,7 @@ export default function ProductDetails() {
               <p className="product-contact-label">📞 Телефон за контакт</p>
               <p className="product-contact-phone">Контакт чрез платформата</p>
             </div>
-            <button onClick={() => alert('Свържи се с продавача чрез наличните данни в профила.')} className="btn-contact">
-              💬 Свържи се с фермера
-            </button>
+           
           </div>
         </div>
 
