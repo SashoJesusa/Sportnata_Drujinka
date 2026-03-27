@@ -229,4 +229,4 @@ app.get('/products/:id', async (req, res) => {
 });
 
 
-app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
+app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
