@@ -36,7 +36,7 @@ export default function Home() {
           <h1 className="hero-title">Свежи продукти<br /><span className="hero-accent">директно от фермата</span></h1>
           <p className="hero-subtitle">Намери местни земеделци и купи директно — без посредници.</p>
           <div className="hero-search">
-            <input className="hero-search-input" placeholder="Търси фермерски продукти, техника..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="hero-search-input" placeholder="Търси фермерски продукти" value={search} onChange={e => setSearch(e.target.value)} />
             <button className="hero-search-btn">🔍 Търси</button>
           </div>
         </div>
@@ -64,7 +64,6 @@ export default function Home() {
             <h2 className="section-title">Продукти на нашите фермери</h2>
             <p className="section-sub">Открийте свежи продукти от местни земеделци</p>
           </div>
-          <Link to="/add-product" className="btn-add">+ Добави обява</Link>
         </div>
         <div className="filters">
           <div className="categories">

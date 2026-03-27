@@ -103,7 +103,7 @@ export default function Community() {
 
   return (
     <div className="community-container">
-      <Navbar />
+      <Navbar onAction={(a) => a === 'new-post' && setShowNewPost(true)} />
       <div className="community-wrapper">
 
         {/* HEADER */}
@@ -112,7 +112,6 @@ export default function Community() {
             <h1>🌿 Общност</h1>
             <p>Споделяй опит, задавай въпроси и помагай на другите фермери</p>
           </div>
-          <button className="btn-new-post" onClick={() => setShowNewPost(true)}>+ Нов пост</button>
         </div>
 
         {/* CATEGORIES */}

@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:wght@300;400;500;600&display=swap');
+
+.coalitions-container { min-height: 100vh; background: #f9fafb; }
+.coalitions-wrapper { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* HERO */
+.coalitions-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #15803d 100%);
+  border-radius: 20px; padding: 48px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 32px; color: white; gap: 24px;
+}
+.coalitions-tag { background: rgba(255,255,255,0.15); color: #86efac; padding: 5px 14px; border-radius: 20px; font-size: 13px; font-family: 'Source Serif 4', serif; display: inline-block; margin-bottom: 14px; }
+.coalitions-hero-text h1 { font-family: 'Playfair Display', serif; font-size: 34px; margin-bottom: 12px; }
+.coalitions-hero-text p { font-family: 'Source Serif 4', serif; font-size: 15px; opacity: 0.88; line-height: 1.6; max-width: 520px; margin-bottom: 24px; }
+.hero-stats-row { display: flex; gap: 32px; }
+.hero-stat { display: flex; flex-direction: column; }
+.hero-stat span { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #86efac; }
+.hero-stat small { font-size: 12px; opacity: 0.75; font-family: 'Source Serif 4', serif; }
+.btn-create-coalition { background: white; color: #15803d; border: none; padding: 14px 28px; border-radius: 10px; font-family: 'Source Serif 4', serif; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.btn-create-coalition:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+/* CATEGORIES */
+.coalitions-categories { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.cat-btn { padding: 8px 18px; border-radius: 20px; border: 1.5px solid #e5e7eb; background: white; color: #374151; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: 'Source Serif 4', serif; }
+.cat-btn:hover { border-color: #15803d; color: #15803d; }
+.cat-btn.active { background: #15803d; color: white; border-color: #15803d; }
+
+/* LIST */
+.coalitions-list { display: flex; flex-direction: column; gap: 16px; }
+
+.coalition-row {
+  background: white; border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.coalition-row:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
+
+.coalition-row-main { display: flex; gap: 24px; margin-bottom: 18px; }
+.coalition-row-left { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.coalition-row-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.coalition-category-badge { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 20px; padding: 3px 12px; font-size: 12px; font-family: 'Source Serif 4', serif; font-weight: 600; }
+.coalition-hot { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-family: 'Source Serif 4', serif; }
+.coalition-joined-tag { background: #d1fae5; color: #15803d; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-family: 'Source Serif 4', serif; }
+
+.coalition-row-title { font-family: 'Playfair Display', serif; font-size: 19px; color: #1a1a2e; margin: 0; }
+
+.coalition-row-meta { display: flex; flex-wrap: wrap; gap: 14px; font-family: 'Source Serif 4', serif; font-size: 13px; color: #6b7280; }
+
+.coalition-row-desc { font-family: 'Source Serif 4', serif; font-size: 14px; color: #4b5563; line-height: 1.6; margin: 0; }
+
+.coalition-row-right { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; min-width: 200px; }
+
+.coalition-prices { display: flex; align-items: center; gap: 12px; background: #f9fafb; border-radius: 10px; padding: 12px 16px; border: 1px solid #e5e7eb; }
+.price-block { display: flex; flex-direction: column; align-items: center; }
+.price-lbl { font-size: 10px; color: #9ca3af; font-family: 'Source Serif 4', serif; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+.price-big { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+.price-big.green { color: #15803d; }
+.price-big.red { color: #dc2626; text-decoration: line-through; font-size: 14px; }
+.price-divider { font-size: 12px; color: #9ca3af; font-family: 'Source Serif 4', serif; }
+
+.coalition-farmers-count { font-family: 'Source Serif 4', serif; font-size: 13px; color: #6b7280; }
+
+/* PROGRESS */
+.coalition-progress-wrap { margin-bottom: 16px; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 13px; color: #6b7280; font-family: 'Source Serif 4', serif; margin-bottom: 7px; }
+.progress-pct { font-weight: 700; color: #15803d; }
+.progress-track { height: 12px; background: #e5e7eb; border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; transition: width 0.4s ease; background: #15803d; }
+
+/* ACTIONS */
+.coalition-row-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-details-coal { background: white; border: 1.5px solid #e5e7eb; color: #374151; padding: 9px 20px; border-radius: 8px; font-family: 'Source Serif 4', serif; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.btn-details-coal:hover { border-color: #15803d; color: #15803d; }
+.btn-join { background: #15803d; color: white; border: none; padding: 9px 20px; border-radius: 8px; font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-join:hover:not(:disabled) { background: #166534; }
+.btn-join.joined, .btn-join:disabled { background: #d1fae5; color: #15803d; cursor: default; }
+.btn-call { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #15803d; padding: 9px 20px; border-radius: 8px; font-family: 'Source Serif 4', serif; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+.btn-call:hover { background: #dcfce7; }
+
+.empty-coalitions { text-align: center; padding: 60px; color: #6b7280; font-family: 'Source Serif 4', serif; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal-coalition { background: white; border-radius: 18px; width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.22); }
+.modal-close { position: absolute; top: 14px; right: 14px; z-index: 10; background: #f3f4f6; border: none; border-radius: 50%; width: 32px; height: 32px; color: #374151; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: #e5e7eb; }
+.modal-coalition-body { padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+.modal-coalition-body h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a2e; margin: 0; }
+.coalition-organizer-line { font-family: 'Source Serif 4', serif; font-size: 13px; color: #6b7280; margin: 0; }
+.modal-description { font-family: 'Source Serif 4', serif; font-size: 14px; color: #4b5563; line-height: 1.6; margin: 0; }
+.modal-prices { display: flex; align-items: center; gap: 16px; background: #f9fafb; border-radius: 12px; padding: 16px 20px; border: 1px solid #e5e7eb; }
+.farmers-list { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+.farmers-list h4 { font-family: 'Playfair Display', serif; font-size: 15px; color: #1a1a2e; margin: 0 0 12px; }
+.farmer-row { display: flex; justify-content: space-between; font-family: 'Source Serif 4', serif; font-size: 13px; color: #374151; padding: 6px 0; border-bottom: 1px solid #f3f4f6; }
+.farmer-row:last-child { border-bottom: none; }
+.farmer-qty { color: #15803d; font-weight: 600; }
+.no-farmers { color: #9ca3af; font-family: 'Source Serif 4', serif; font-size: 13px; text-align: center; padding: 8px 0; }
+.modal-contact-box { background: #f0fdf4; border-radius: 8px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #15803d; }
+.join-form { border: 2px dashed #bbf7d0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.join-form h4 { font-family: 'Playfair Display', serif; font-size: 16px; color: #1a1a2e; margin: 0; }
+.join-qty-row { display: flex; gap: 10px; }
+.btn-join-confirm { background: #15803d; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+.btn-join-confirm:hover { background: #166534; }
+.joined-success { background: #d1fae5; color: #15803d; border-radius: 10px; padding: 14px; text-align: center; font-family: 'Source Serif 4', serif; font-size: 15px; font-weight: 600; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-family: 'Source Serif 4', serif; font-size: 13px; color: #374151; font-weight: 600; }
+.form-input { border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #1a1a2e; outline: none; width: 100%; box-sizing: border-box; }
+.form-input:focus { border-color: #15803d; }
+.form-select { border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #1a1a2e; background: white; outline: none; width: 100%; box-sizing: border-box; }
+.form-select:focus { border-color: #15803d; }
+.form-textarea { border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #1a1a2e; outline: none; width: 100%; box-sizing: border-box; resize: vertical; }
+.form-textarea:focus { border-color: #15803d; }
+.form-row-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.btn-create-submit { background: #15803d; color: white; border: none; padding: 13px; border-radius: 10px; width: 100%; font-family: 'Source Serif 4', serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
+.btn-create-submit:hover { background: #166534; transform: translateY(-1px); }
