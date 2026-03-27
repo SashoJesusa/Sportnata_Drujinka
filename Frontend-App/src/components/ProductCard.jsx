@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './ProductCard.css'
 
 export default function ProductCard({ product, onContact }) {
+  const [liked, setLiked] = useState(false)
   if (!product) return null
   const productLink = `/products/${encodeURIComponent(String(product.id))}`
   const hasImage = Boolean(product.imageUrl)
@@ -16,6 +18,10 @@ export default function ProductCard({ product, onContact }) {
             <span className="card-emoji">{product.emoji}</span>
           )}
           {product.badge && <span className="card-badge">{product.badge}</span>}
+          <button
+            className={`card-like ${liked ? 'liked' : ''}`}
+            onClick={e => { e.preventDefault(); setLiked(!liked) }}
+          >♥</button>
         </div>
       </Link>
       <div className="card-body">
@@ -28,8 +34,7 @@ export default function ProductCard({ product, onContact }) {
         <p className="card-meta">👨‍🌾 {product.farmer} · 📍 {product.village}</p>
         <div className="card-rating">
           <span className="stars">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
-          <span className="rating-num">{product.rating}</span>
-          <span className="rating-count">({product.reviews} отзива)</span>
+          <span className="rating-num">{product.rating} ({product.reviews} отзива)</span>
         </div>
         <div className="card-actions">
           <Link to={productLink} className="btn-details">Виж детайли</Link>

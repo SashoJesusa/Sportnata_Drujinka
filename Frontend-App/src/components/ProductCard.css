@@ -1,25 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@300;400;500;600&display=swap');
+
 .product-card {
   background: white;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(44, 24, 16, 0.07);
-  border: 1px solid #ede8e0;
-  transition: transform 0.25s, box-shadow 0.25s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(44, 24, 16, 0.13);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
 }
 
 .card-image-link { display: block; text-decoration: none; }
 
 .card-image {
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  padding: 32px 20px;
-  text-align: center;
   position: relative;
   min-height: 180px;
   display: flex;
@@ -41,96 +40,140 @@
   display: block;
 }
 
-.card-emoji {
-  font-size: 60px;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
 }
+
+.product-card:hover .card-img { transform: scale(1.05); }
 
 .card-badge {
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 12px;
   background: #15803d;
   color: white;
+  font-size: 11px;
   font-family: 'Source Serif 4', serif;
-  font-size: 10px;
   font-weight: 600;
   padding: 4px 10px;
-  border-radius: 100px;
+  border-radius: 20px;
 }
 
+.card-like {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #d1d5db;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-like:hover { color: #ef4444; transform: scale(1.1); }
+.card-like.liked { color: #ef4444; }
+
 .card-body {
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
+.card-category {
+  font-size: 11px;
+  font-family: 'Source Serif 4', serif;
+  color: #15803d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .card-title-link { text-decoration: none; }
 
 .card-title {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #2c1810;
+  font-size: 17px;
+  color: #1a1a2e;
   margin: 0;
-  transition: color 0.2s;
+  line-height: 1.3;
 }
 
-.card-title-link:hover .card-title { color: #15803d; }
+.card-title:hover { color: #15803d; }
 
 .card-price {
   font-family: 'Playfair Display', serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   color: #15803d;
-  white-space: nowrap;
+  margin: 0;
 }
 
-.card-meta { font-family: 'Source Serif 4', serif; font-size: 13px; color: #78716c; margin: 0; }
+.card-price span { font-size: 14px; font-weight: 400; color: #6b7280; }
 
-.card-rating { display: flex; align-items: center; gap: 5px; }
+.card-meta {
+  font-size: 12px;
+  color: #6b7280;
+  font-family: 'Source Serif 4', serif;
+  margin: 0;
+}
 
-.stars { color: #f59e0b; font-size: 13px; letter-spacing: 1px; }
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-.rating-num { font-family: 'Source Serif 4', serif; font-size: 13px; font-weight: 600; color: #2c1810; }
+.stars { color: #f59e0b; font-size: 13px; }
 
-.rating-count { font-family: 'Source Serif 4', serif; font-size: 12px; color: #a8a29e; }
+.rating-num {
+  font-size: 12px;
+  color: #6b7280;
+  font-family: 'Source Serif 4', serif;
+}
 
-.card-actions { display: flex; gap: 8px; margin-top: 4px; }
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
 
 .btn-details {
   flex: 1;
   background: #15803d;
   color: white;
   text-decoration: none;
-  font-family: 'Source Serif 4', serif;
-  font-size: 14px;
-  padding: 10px 14px;
-  border-radius: 8px;
   text-align: center;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
   transition: background 0.2s;
 }
 
 .btn-details:hover { background: #166534; }
 
-.btn-contact {
-  padding: 10px 14px;
-  border: 2px solid #ede8e0;
+.btn-contact-card {
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
   border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
+  padding: 9px 14px;
   font-size: 16px;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
-.btn-contact:hover { border-color: #15803d; background: #f0fdf4; }
+.btn-contact-card:hover { background: #dcfce7; border-color: #86efac; }

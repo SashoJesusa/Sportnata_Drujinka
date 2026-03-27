@@ -1,7 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './Navbar.css'
 
-export default function Navbar() {
+const ACTION_BUTTONS = {
+  '/home': { to: '/add-product', label: '+ Публикувай обява' },
+  '/add-product': { to: '/add-product', label: '+ Публикувай обява' },
+  '/community': { to: '/community', label: '+ Нов въпрос', action: 'new-post' },
+  '/coalitions': { to: '/coalitions', label: '+ Нова коалиция', action: 'new-coalition' },
+}
+
+export default function Navbar({ onAction }) {
   const location = useLocation()
   const navigate = useNavigate()
   const path = location.pathname
@@ -55,10 +62,12 @@ export default function Navbar() {
   const isHomeActive = path === '/home' && hash !== '#site-footer'
   const isAboutActive = path === '/home' && hash === '#site-footer'
 
+  const btn = ACTION_BUTTONS[path] || ACTION_BUTTONS['/home']
+
   return (
     <header className="header">
       <div className="header-top">
-        <span className="header-top-left">🌾 AgroHub — Твоето фермерско пазарче</span>
+        <span className="header-top-left"></span>
         <div className="header-top-right">
           {user ? (
             <>
@@ -79,9 +88,16 @@ export default function Navbar() {
         <div className="navbar-links">
           <Link to="/home" onClick={handleHomeClick} className={`nav-link ${isHomeActive ? 'active' : ''}`}>Начало</Link>
           <Link to="/community" className={`nav-link ${path === '/community' ? 'active' : ''}`}>Форум</Link>
+          <Link to="/coalitions" className={`nav-link ${path === '/coalitions' ? 'active' : ''}`}>Коалиции</Link>
           <Link to="/home#site-footer" className={`nav-link ${isAboutActive ? 'active' : ''}`} onClick={handleAboutClick}>За Нас</Link>
         </div>
-        <Link to="/add-product" className="btn-sell">Публикувай Обява</Link>
+        {btn.action ? (
+          <button className="btn-sell" onClick={() => onAction && onAction(btn.action)}>
+            {btn.label}
+          </button>
+        ) : (
+          <Link to={btn.to} className="btn-sell">{btn.label}</Link>
+        )}
       </nav>
     </header>
   )
