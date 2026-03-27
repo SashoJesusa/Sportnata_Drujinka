@@ -22,7 +22,7 @@ export default function MyListings() {
 
     const loadMyListings = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/my-listings', {
+        const response = await axios.get('http://localhost:4000/my-products', {
           headers: {
             'X-Session-Id': sessionId,
           },
@@ -30,7 +30,6 @@ export default function MyListings() {
         console.log('My Listings API Response:', response.data)
         setMyProducts(response.data?.products || [])
       } catch (err) {
-        const message = err?.response?.data?.error || 'Не успяхме да заредим обявите.'
         if (err?.response?.status === 401) {
           localStorage.removeItem('user')
           localStorage.removeItem('sessionId')

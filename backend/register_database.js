@@ -77,7 +77,6 @@ const upload = multer({ storage: multer.memoryStorage() }); // Пазим сни
 
 app.post('/add-product', upload.single('image'), async (req, res) => {
     try {
-        console.log("request", req);
         const { name, category, price, oblast, description } = req.body;
         const file = req.file;
 
