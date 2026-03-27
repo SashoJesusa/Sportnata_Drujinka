@@ -67,7 +67,7 @@ export default function Navbar({ onAction }) {
   return (
     <header className="header">
       <div className="header-top">
-        <span className="header-top-left"></span>
+        <span className="header-top-left">🌾 AgroHub — Твоето фермерско пазарче</span>
         <div className="header-top-right">
           {user ? (
             <>
