@@ -1,16 +1,43 @@
-# React + Vite
+# Frontend App (Vite + React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Local development
 
-Currently, two official plugins are available:
+1. Create a `.env` file in this folder.
+2. Set the backend URL:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```env
+VITE_API_BASE_URL=http://localhost:4000
+```
 
-## React Compiler
+3. Install dependencies and run:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+## Production deployment (Netlify)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is prepared for Netlify hosting with client-side routing support.
+
+Required settings:
+
+1. Build command: `npm run build`
+2. Publish directory: `dist`
+3. Environment variable:
+
+```env
+VITE_API_BASE_URL=https://your-render-backend.onrender.com
+```
+
+Files included for Netlify:
+
+- `netlify.toml` for build + redirect settings
+- `public/_redirects` for SPA fallback to `index.html`
+
+## API configuration
+
+All frontend API requests use a shared helper in `src/config/api.js`.
+
+- Local fallback is `http://localhost:4000`
+- Production should use `VITE_API_BASE_URL`

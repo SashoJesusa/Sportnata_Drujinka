@@ -7,7 +7,26 @@ const { createClient } = require('@supabase/supabase-js');
 
 
 const app = express();
-app.use(cors()); 
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const corsOptions = {
+    origin(origin, callback) {
+        // Allow non-browser tools and same-origin requests with no Origin header.
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+};
+
+app.use(cors(corsOptions)); 
 app.use(express.json());
 
 // 2. Връзка със Supabase (Изтрих публичните ключове заради сигурността)
@@ -83,13 +102,11 @@ app.post('/login', async (req, res) => {
             .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
             .select();
         
-        res.status(201).json({ 
+        return res.status(201).json({ 
             success: true, 
             user: { username: user.username },
             sessionId: sessionData[0].session_id
         });
-
-        res.json({ success: true, user: { username: user.username } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Грешка при вход" });
@@ -393,4 +410,5 @@ app.post('/posts/:postId/replies', async (req, res) => {
 });
 
 
-app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
+const port = Number(process.env.PORT) || 4000;
+app.listen(port, () => console.log(`Сървър: http://localhost:${port}`));

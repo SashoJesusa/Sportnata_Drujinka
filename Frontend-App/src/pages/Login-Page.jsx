@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios' // Добавено
 import '../styles/LoginPage.css'
+import { buildApiUrl } from '../config/api'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export default function LoginPage() {
     if (Object.keys(newErrors).length > 0) return setErrors(newErrors)
 
     try {
-      const res = await axios.post('http://localhost:4000/login', loginData)
+      const res = await axios.post(buildApiUrl('/login'), loginData)
       if (res.data.success) {
         console.log('API Response:', res.data)
         if (!res.data.sessionId) {
@@ -62,7 +63,7 @@ export default function LoginPage() {
     if (Object.keys(newErrors).length > 0) return setErrors(newErrors)
 
     try {
-      const res = await axios.post('http://localhost:4000/register', {
+      const res = await axios.post(buildApiUrl('/register'), {
         username: registerData.name,
         email: registerData.email,
         password: registerData.password

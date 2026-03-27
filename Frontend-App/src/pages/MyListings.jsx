@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
 import '../styles/MyListings.css'
+import { buildApiUrl } from '../config/api'
 
 export default function MyListings() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ export default function MyListings() {
 
     const loadMyListings = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/my-products', {
+        const response = await axios.get(buildApiUrl('/my-products'), {
           headers: {
             'X-Session-Id': sessionId,
           },
@@ -59,7 +60,7 @@ export default function MyListings() {
 
     try {
       setDeletingId(listingId)
-      await axios.delete(`http://localhost:4000/products/${listingId}`, {
+      await axios.delete(buildApiUrl(`/products/${listingId}`), {
         headers: {
           'X-Session-Id': sessionId,
         },

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import '../styles/Home.css'
+import { buildApiUrl } from '../config/api'
 
 const CATEGORIES = [
   'Всички',
@@ -50,12 +51,12 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         setProductsError('')
-        const response = await fetch('http://localhost:4000/all-products')
+        const response = await fetch(buildApiUrl('/all-products'))
         const contentType = response.headers.get('content-type') || ''
         const rawBody = await response.text()
 
         if (!contentType.includes('application/json')) {
-          throw new Error('Сървърът не върна JSON. Провери дали backend е стартиран на порт 4000.')
+          throw new Error('Сървърът не върна JSON. Провери дали backend е стартиран.')
         }
 
         let result
