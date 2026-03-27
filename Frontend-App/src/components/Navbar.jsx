@@ -88,7 +88,7 @@ export default function Navbar({ onAction }) {
         <div className="navbar-links">
           <Link to="/home" onClick={handleHomeClick} className={`nav-link ${isHomeActive ? 'active' : ''}`}>Начало</Link>
           <Link to="/community" className={`nav-link ${path === '/community' ? 'active' : ''}`}>Форум</Link>
-          <Link to="/coalitions" className={`nav-link ${path === '/coalitions' ? 'active' : ''}`}>Коалиции</Link>
+          <Link to="/coalitions" className={`nav-link ${path === '/coalitions' ? 'active' : ''}`}>Кампании</Link>
           <Link to="/home#site-footer" className={`nav-link ${isAboutActive ? 'active' : ''}`} onClick={handleAboutClick}>За Нас</Link>
         </div>
         {btn.action ? (

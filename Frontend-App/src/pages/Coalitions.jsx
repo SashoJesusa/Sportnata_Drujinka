@@ -160,7 +160,7 @@ export default function Coalitions() {
         <div className="coalitions-hero">
           <div className="coalitions-hero-text">
             <span className="coalitions-tag">🤝 Сила в единството</span>
-            <h1>Коалиции</h1>
+            <h1>Кампании</h1>
             <p>Обединете се с други фермери, достигнете нужното количество и продавайте директно на големи вериги — на <strong>справедливи цени</strong>.</p>
             <div className="hero-stats-row">
               <div className="hero-stat"><span>3×</span><small>по-висока цена</small></div>

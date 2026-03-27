@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:wght@300;400;500;600&display=swap');
 
-.community-container { min-height: 100vh; background: #faf8f5; }
+.community-container {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(134, 239, 172, 0.3), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(125, 211, 252, 0.26), transparent 30%),
+    linear-gradient(145deg, #edf8f2 0%, #f7f4ed 58%, #edf5fa 100%);
+}
 
 .community-wrapper {
   max-width: 780px;
@@ -29,6 +35,16 @@
   margin: 0;
 }
 
+.community-error {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
 .btn-new-post {
   background: #15803d;
   color: white;
@@ -54,13 +70,15 @@
 .cat-btn {
   padding: 7px 16px;
   border-radius: 20px;
-  border: 1.5px solid #ede8e0;
-  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  background: rgba(255, 255, 255, 0.3);
   color: #5c3d2e;
   font-family: 'Source Serif 4', serif;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .cat-btn:hover { border-color: #15803d; color: #15803d; }
@@ -69,13 +87,15 @@
 .posts-list { display: flex; flex-direction: column; gap: 16px; }
 
 .post-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.34);
   border-radius: 14px;
   padding: 22px;
-  border: 1px solid #ede8e0;
+  border: 1px solid rgba(255, 255, 255, 0.54);
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 1px 4px rgba(44,24,16,0.04);
+  box-shadow: 0 12px 28px rgba(44,24,16,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .post-card:hover { box-shadow: 0 4px 16px rgba(44,24,16,0.08); transform: translateY(-2px); border-color: #d4c5b0; }
@@ -122,8 +142,8 @@
 .post-actions { display: flex; gap: 12px; }
 
 .action-btn {
-  background: #faf8f5;
-  border: 1px solid #ede8e0;
+  background: rgba(255, 255, 255, 0.44);
+  border: 1px solid rgba(255, 255, 255, 0.52);
   border-radius: 8px;
   padding: 6px 14px;
   font-size: 13px;
@@ -149,7 +169,7 @@
 }
 
 .modal-community {
-  background: white;
+  background: rgba(255, 255, 255, 0.34);
   border-radius: 18px;
   padding: 32px;
   width: 100%;
@@ -158,6 +178,9 @@
   overflow-y: auto;
   position: relative;
   box-shadow: 0 20px 60px rgba(44,24,16,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .modal-close {
@@ -212,7 +235,7 @@
 
 .reply-textarea {
   width: 100%;
-  border: 1.5px solid #ede8e0;
+  border: 1.5px solid rgba(255, 255, 255, 0.58);
   border-radius: 10px;
   padding: 12px;
   font-family: 'Source Serif 4', serif;
@@ -221,6 +244,7 @@
   resize: vertical;
   box-sizing: border-box;
   margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .reply-textarea:focus { outline: none; border-color: #15803d; }
@@ -241,7 +265,7 @@
 
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; margin-bottom: 6px; font-weight: 600; }
-.form-input { width: 100%; border: 1.5px solid #ede8e0; border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; box-sizing: border-box; }
+.form-input { width: 100%; border: 1.5px solid rgba(255, 255, 255, 0.58); border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; box-sizing: border-box; background: rgba(255, 255, 255, 0.52); }
 .form-input:focus { outline: none; border-color: #15803d; }
-.form-select { width: 100%; border: 1.5px solid #ede8e0; border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; background: white; box-sizing: border-box; }
+.form-select { width: 100%; border: 1.5px solid rgba(255, 255, 255, 0.58); border-radius: 10px; padding: 10px 14px; font-family: 'Source Serif 4', serif; font-size: 14px; color: #2c1810; background: rgba(255, 255, 255, 0.52); box-sizing: border-box; }
 .form-select:focus { outline: none; border-color: #15803d; }
