@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/AddProduct.css";
+import { buildApiUrl } from "../config/api";
 
 const OBLASTI = [
   "Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", 
@@ -83,7 +84,7 @@ export default function AddProduct() {
         const myHeaders = new Headers();
       myHeaders.append("X-Session-Id", sessionId);
 
-        const response = await fetch("http://localhost:4000/add-product", {
+        const response = await fetch(buildApiUrl("/add-product"), {
             method: "POST",
             headers: myHeaders,
             body: formData, // Важно: Не слагай Headers за JSON, браузърът сам ще сложи нужния Boundary

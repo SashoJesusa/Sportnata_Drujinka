@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "node register_database.js",
+    "dev": "node register_database.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.0",
     "bcrypt": "^6.0.0",

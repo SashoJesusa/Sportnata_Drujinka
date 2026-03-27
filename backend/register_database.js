@@ -48,14 +48,30 @@ app.post('/register', async (req, res) => {
         const { username, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const { data, error } = await supabase
+        const { data: newUser, error: insertError } = await supabase
             .from('profiles')
             .insert([{ username, email, password: hashedPassword }])
             .select();
 
-        if (error) return res.status(400).json({ error: error.message });
-        res.status(201).json({ success: true });
+        if (insertError) return res.status(400).json({ error: insertError.message });
+
+        const user = newUser[0];
+
+        // Create session for new user
+        const { data: sessionData, error: sessionError } = await supabase
+            .from('sessions')
+            .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
+            .select();
+
+        if (sessionError) return res.status(400).json({ error: sessionError.message });
+        
+        return res.status(201).json({ 
+            success: true, 
+            user: { username: user.username },
+            sessionId: sessionData[0].session_id
+        });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Грешка в сървъра" });
     }
 });
@@ -83,13 +99,11 @@ app.post('/login', async (req, res) => {
             .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
             .select();
         
-        res.status(201).json({ 
+        return res.status(201).json({ 
             success: true, 
             user: { username: user.username },
             sessionId: sessionData[0].session_id
         });
-
-        res.json({ success: true, user: { username: user.username } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Грешка при вход" });
@@ -285,6 +299,10 @@ app.post('/posts', async (req, res) => {
         const { title, text, category } = req.body;
         const sessionId = req.headers['x-session-id'];
 
+        if (!title || !text || !category) {
+            return res.status(400).json({ error: "Липсват задължителни полета: title, text, category" });
+        }
+
         const { data: session, error: sessionError } = await supabase
             .from('sessions')
             .select('user_id')
@@ -300,11 +318,14 @@ app.post('/posts', async (req, res) => {
             .insert([{ title, text, category, author_id: session.user_id }])
             .select();
 
-        if (postError) throw postError;
+        if (postError) {
+            console.error('Post creation error:', postError);
+            return res.status(400).json({ error: postError.message || "Грешка при създаване на пост" });
+        }
 
         res.status(201).json({ success: true, post: post[0] });
     } catch (err) {
-        console.error(err);
+        console.error('Unexpected error creating post:', err);
         res.status(500).json({ error: "Грешка при създаване на пост" });
     }
 });
@@ -393,4 +414,5 @@ app.post('/posts/:postId/replies', async (req, res) => {
 });
 
 
-app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
+const port = Number(process.env.PORT) || 4000;
+app.listen(port, () => console.log(`Сървър: http://localhost:${port}`));

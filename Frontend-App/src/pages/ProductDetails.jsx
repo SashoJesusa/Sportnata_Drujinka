@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import '../styles/ProductDetails.css'
+import { buildApiUrl } from '../config/api'
 
 export default function ProductDetails() {
   const { id } = useParams()
@@ -20,12 +21,12 @@ export default function ProductDetails() {
           throw new Error('Невалиден линк към продукт.')
         }
 
-        const response = await fetch(`http://localhost:4000/products/${encodeURIComponent(id)}`)
+        const response = await fetch(buildApiUrl(`/products/${encodeURIComponent(id)}`))
         const contentType = response.headers.get('content-type') || ''
         const rawBody = await response.text()
 
         if (!contentType.includes('application/json')) {
-          throw new Error('Сървърът не върна JSON. Провери backend на порт 4000.')
+          throw new Error('Сървърът не върна JSON. Провери backend сървъра.')
         }
 
         const result = JSON.parse(rawBody)
