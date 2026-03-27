@@ -279,5 +279,118 @@ app.delete('/products/:id', async (req, res) => {
     }
 });
 
+// Create a post
+app.post('/posts', async (req, res) => {
+    try {
+        const { title, text, category } = req.body;
+        const sessionId = req.headers['x-session-id'];
+
+        const { data: session, error: sessionError } = await supabase
+            .from('sessions')
+            .select('user_id')
+            .eq('session_id', sessionId)
+            .single();
+
+        if (sessionError || !session) {
+            return res.status(401).json({ error: "Сесията е невалидна" });
+        }
+
+        const { data: post, error: postError } = await supabase
+            .from('posts')
+            .insert([{ title, text, category, author_id: session.user_id }])
+            .select();
+
+        if (postError) throw postError;
+
+        res.status(201).json({ success: true, post: post[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при създаване на пост" });
+    }
+});
+
+// Get all posts with replies and usernames
+app.get('/posts', async (req, res) => {
+    try {
+        const { data: posts, error: postsError } = await supabase
+            .from('posts')
+            .select('*')
+            .order('id', { ascending: false });
+
+        if (postsError) throw postsError;
+
+        const postsWithData = await Promise.all(
+            (posts || []).map(async (post) => {
+                const { data: author } = await supabase
+                    .from('profiles')
+                    .select('username')
+                    .eq('user_id', post.author_id)
+                    .single();
+
+                const { data: replies } = await supabase
+                    .from('post_replies')
+                    .select('*')
+                    .eq('post_id', post.id)
+                    .order('id', { ascending: true });
+
+                const repliesWithData = await Promise.all(
+                    (replies || []).map(async (reply) => {
+                        const { data: replyAuthor } = await supabase
+                            .from('profiles')
+                            .select('username')
+                            .eq('user_id', reply.author_id)
+                            .single();
+                        return { ...reply, username: replyAuthor?.username || null };
+                    })
+                );
+
+                return { ...post, username: author?.username || null, replies: repliesWithData };
+            })
+        );
+
+        res.status(200).json({ success: true, posts: postsWithData });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при извличане на постовете" });
+    }
+});
+
+// Add a reply to a post
+app.post('/posts/:postId/replies', async (req, res) => {
+    try {
+        const { text } = req.body;
+        const postId = Number(req.params.postId);
+        const sessionId = req.headers['x-session-id'];
+
+        const { data: session, error: sessionError } = await supabase
+            .from('sessions')
+            .select('user_id')
+            .eq('session_id', sessionId)
+            .single();
+
+        if (sessionError || !session) {
+            return res.status(401).json({ error: "Сесията е невалидна" });
+        }
+
+        const { data: reply, error: replyError } = await supabase
+            .from('post_replies')
+            .insert([{ post_id: postId, text, author_id: session.user_id }])
+            .select();
+
+        if (replyError) throw replyError;
+
+        const { data: author } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('user_id', session.user_id)
+            .single();
+
+        res.status(201).json({ success: true, reply: { ...reply[0], username: author?.username || null } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при добавяне на отговор" });
+    }
+});
+
 
 app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
