@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import mockProducts from '../data/mockProducts'
 import '../styles/ProductDetails.css'
 
 export default function ProductDetails() {

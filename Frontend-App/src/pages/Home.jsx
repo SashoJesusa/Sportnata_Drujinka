@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
-import mockProducts from '../data/mockProducts'
 import '../styles/Home.css'
 
 const CATEGORIES = ['Всички', 'Зеленчуци', 'Плодове', 'Млечни', 'Пчелни продукти', 'Птицевъдство', 'Напитки']
@@ -25,14 +24,6 @@ export default function Home() {
     }
   }, [location.hash])
 
-  const filtered = mockProducts.filter(p => {
-    const matchSearch =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.farmer.toLowerCase().includes(search.toLowerCase()) ||
-      p.village.toLowerCase().includes(search.toLowerCase())
-    const matchCategory = category === 'Всички' || p.category === category
-    return matchSearch && matchCategory
-  })
 
   return (
     <div className="page">
@@ -83,18 +74,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="products-grid">
-          {filtered.map(product => (
-            <ProductCard key={product.id} product={product} onContact={p => setContactProduct(p)} />
-          ))}
-          {filtered.length === 0 && (
-            <div className="empty-state">
-              <div style={{ fontSize: '52px', marginBottom: '16px' }}>🌾</div>
-              <p>Няма намерени продукти</p>
-              <button onClick={() => { setSearch(''); setCategory('Всички') }} className="btn-reset">Изчисти филтрите</button>
-            </div>
-          )}
-        </div>
+        
       </section>
 
       {/* FOOTER */}
