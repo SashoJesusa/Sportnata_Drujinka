@@ -53,8 +53,21 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ error: "Грешен имейл или парола" });
 
+            // Create session for new user
+        const { data: sessionData } = await supabase
+            .from('sessions')
+            .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
+            .select();
+        
+        res.status(201).json({ 
+            success: true, 
+            user: { username: user.username },
+            sessionId: sessionData[0].session_id
+        });
+
         res.json({ success: true, user: { username: user.username } });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Грешка при вход" });
     }
 });
@@ -62,6 +75,53 @@ app.post('/login', async (req, res) => {
 // ==========================================
 // --- СНИМКИ (Твоят код) ---
 // ==========================================
+
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() }); // Пазим снимката временно в RAM
+
+app.post('/add-product', upload.single('image'), async (req, res) => {
+    try {
+        console.log("request", req);
+        const { name, category, price, oblast, description } = req.body;
+        const file = req.file;
+
+        if (!file) return res.status(400).json({ error: "Снимката е задължителна" });
+
+        // 1. Качване на снимката в Supabase Storage
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const { data: storageData, error: storageError } = await supabase.storage
+            .from('product-images') // Името на твоя Bucket в Supabase
+            .upload(fileName, file.buffer, { contentType: file.mimetype });
+
+        if (storageError) throw storageError;
+
+        // Вземане на публичния URL на снимката
+        const { data: urlData } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(fileName);
+
+        const imageUrl = urlData.publicUrl;
+
+        // 2. Запис на данните в таблица 'products'
+        const { data: productData, error: productError } = await supabase
+            .from('products')
+            .insert([{ 
+                product: name, 
+                category, 
+                price: parseFloat(price), 
+                region: oblast, 
+                description, 
+                image_url: imageUrl 
+            }]);
+
+        if (productError) throw productError;
+
+        res.status(201).json({ success: true, message: "Обявата е добавена!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при запис на обявата" });
+    }
+});
 
 
 app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));

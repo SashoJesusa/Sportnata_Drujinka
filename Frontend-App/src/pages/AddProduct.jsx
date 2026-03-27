@@ -62,19 +62,35 @@ export default function AddProduct() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Създаваме FormData обект
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("category", form.category);
+    formData.append("price", form.price);
+    formData.append("oblast", form.oblast);
+    formData.append("description", form.description);
+    formData.append("image", imageFile); // Самото име на променливата 'image' трябва да съвпада с upload.single('image') в backend-а
 
-    const savedUser = localStorage.getItem("user");
-    const sessionId = localStorage.getItem("sessionId");
-    if (!savedUser || !sessionId) {
-      navigate("/login", { replace: true });
-      return;
+    try {
+        const response = await fetch("http://localhost:4000/add-product", {
+            method: "POST",
+            body: formData, // Важно: Не слагай Headers за JSON, браузърът сам ще сложи нужния Boundary
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Обявата е публикувана успешно!");
+            navigate("/"); // Пренасочване към началната страница
+        } else {
+            alert("Грешка: " + result.error);
+        }
+    } catch (error) {
+        alert("Неуспешна връзка със сървъра.");
     }
-
-    console.log("Изпратени данни:", { ...form, imageName: imageFile?.name || null });
-    alert("Обявата е добавена успешно!");
-  };
+};
 
   return (
     <div className="ap-page">
