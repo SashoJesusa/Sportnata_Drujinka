@@ -5,12 +5,18 @@ import './ProductCard.css'
 export default function ProductCard({ product, onContact }) {
   const [liked, setLiked] = useState(false)
   if (!product) return null
+  const productLink = `/products/${encodeURIComponent(String(product.id))}`
+  const hasImage = Boolean(product.imageUrl)
 
   return (
     <div className="product-card">
-      <Link to={`/products/${product.id}`} className="card-image-link">
-        <div className="card-image">
-          <img src={product.image} alt={product.name} className="card-img" />
+      <Link to={productLink} className="card-image-link">
+        <div className={`card-image ${hasImage ? 'has-photo' : ''}`}>
+          {hasImage ? (
+            <img src={product.imageUrl} alt={product.name} className="card-photo" />
+          ) : (
+            <span className="card-emoji">{product.emoji}</span>
+          )}
           {product.badge && <span className="card-badge">{product.badge}</span>}
           <button
             className={`card-like ${liked ? 'liked' : ''}`}
@@ -19,19 +25,20 @@ export default function ProductCard({ product, onContact }) {
         </div>
       </Link>
       <div className="card-body">
-        <span className="card-category">{product.category}</span>
-        <Link to={`/products/${product.id}`} className="card-title-link">
-          <h3 className="card-title">{product.name}</h3>
-        </Link>
-        <p className="card-price">{product.price.toFixed(2)} лв/<span>{product.unit}</span></p>
-        <p className="card-meta">📍 {product.village} · 👨‍🌾 {product.farmer}</p>
+        <div className="card-header">
+          <Link to={productLink} className="card-title-link">
+            <h3 className="card-title">{product.name}</h3>
+          </Link>
+          <span className="card-price">{product.price.toFixed(2)} лв/{product.unit}</span>
+        </div>
+        <p className="card-meta">👨‍🌾 {product.farmer} · 📍 {product.village}</p>
         <div className="card-rating">
           <span className="stars">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
           <span className="rating-num">{product.rating} ({product.reviews} отзива)</span>
         </div>
         <div className="card-actions">
-          <Link to={`/products/${product.id}`} className="btn-details">Виж детайли</Link>
-          <button className="btn-contact-card" onClick={() => onContact && onContact(product)}>💬</button>
+          <Link to={productLink} className="btn-details">Виж детайли</Link>
+          <button className="btn-contact" onClick={() => onContact && onContact(product)}>💬</button>
         </div>
       </div>
     </div>

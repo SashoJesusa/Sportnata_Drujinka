@@ -10,6 +10,27 @@
   padding: 48px 20px;
 }
 
+.my-listings-state {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #faf7f2;
+  color: #57534e;
+  font-size: 16px;
+  font-family: 'Source Serif 4', serif;
+}
+
+.my-listings-error {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
 .my-listings-header {
   display: flex;
   justify-content: space-between;
@@ -82,6 +103,17 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.listing-item-empty {
+  justify-content: flex-start;
 }
 
 .listing-content {

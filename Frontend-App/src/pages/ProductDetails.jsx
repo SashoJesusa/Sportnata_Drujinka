@@ -1,15 +1,73 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import mockProducts from '../data/mockProducts'
 import '../styles/ProductDetails.css'
 
 export default function ProductDetails() {
   const { id } = useParams()
-  const product = mockProducts.find(p => p.id === Number(id))
+  const [product, setProduct] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setError('')
+        if (!id || id === 'undefined' || id === 'null') {
+          throw new Error('Невалиден линк към продукт.')
+        }
+
+        const response = await fetch(`http://localhost:4000/products/${encodeURIComponent(id)}`)
+        const contentType = response.headers.get('content-type') || ''
+        const rawBody = await response.text()
+
+        if (!contentType.includes('application/json')) {
+          throw new Error('Сървърът не върна JSON. Провери backend на порт 4000.')
+        }
+
+        const result = JSON.parse(rawBody)
+        if (response.status === 404) {
+          setProduct(null)
+          return
+        }
+
+        if (!response.ok || !result?.success) {
+          throw new Error(result?.error || 'Неуспешно зареждане на продукта.')
+        }
+
+        setProduct(result.product || null)
+      } catch (err) {
+        setError(err.message || 'Възникна грешка при зареждане на продукта.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProduct()
+  }, [id])
+
+  if (isLoading) {
+    return (
+      <div className="product-not-found">
+        <Navbar />
+        <p className="product-not-found-text">Зареждане на продукта...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="product-not-found">
+        <Navbar />
+        <div className="product-not-found-icon">⚠️</div>
+        <p className="product-not-found-text">{error}</p>
+        <Link to="/home" className="back-link">← Обратно</Link>
+      </div>
+    )
+  }
 
   if (!product) return (
     <div className="product-not-found">
@@ -27,21 +85,27 @@ export default function ProductDetails() {
         <Link to="/home" className="back-link">← Обратно към продуктите</Link>
 
         <div className="product-card">
-          <div className="product-image-section">{product.emoji}</div>
+          <div className="product-image-section">
+            {product.image_url ? (
+              <img src={product.image_url} alt={product.product || product.name} className="product-image-photo" />
+            ) : (
+              '🌾'
+            )}
+          </div>
           <div className="product-info-section">
-            {product.badge && <span className="product-badge">{product.badge}</span>}
-            <h1 className="product-title">{product.name}</h1>
-            <div className="product-price">{product.price.toFixed(2)} лв / {product.unit}</div>
-            <p className="product-meta">👨‍🌾 <strong>{product.farmer}</strong></p>
-            <p className="product-meta">📍 {product.village}</p>
+            <span className="product-badge">Нова обява</span>
+            <h1 className="product-title">{product.product || product.name}</h1>
+            <div className="product-price">{Number(product.price).toFixed(2)} лв / кг</div>
+            <p className="product-meta">👨‍🌾 <strong>{product.username || (product.user_id ? `Потребител #${product.user_id}` : 'Локален производител')}</strong></p>
+            <p className="product-meta">📍 {product.region || 'България'}</p>
             <p className="product-meta">🏷️ {product.category}</p>
-            <p className="product-meta">⭐ {product.rating} ({product.reviews} отзива)</p>
-            <p className="product-description">{product.description}</p>
+            <p className="product-meta">⭐ Нова обява</p>
+            <p className="product-description">{product.description || 'Няма добавено описание.'}</p>
             <div className="product-contact-box">
               <p className="product-contact-label">📞 Телефон за контакт</p>
-              <p className="product-contact-phone">{product.phone}</p>
+              <p className="product-contact-phone">Контакт чрез платформата</p>
             </div>
-            <button onClick={() => alert(`Обаждаш се на ${product.farmer}: ${product.phone}`)} className="btn-contact">
+            <button onClick={() => alert('Свържи се с продавача чрез наличните данни в профила.')} className="btn-contact">
               💬 Свържи се с фермера
             </button>
           </div>

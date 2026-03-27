@@ -38,6 +38,12 @@ export default function LoginPage() {
     try {
       const res = await axios.post('http://localhost:4000/login', loginData)
       if (res.data.success) {
+        console.log('API Response:', res.data)
+        if (!res.data.sessionId) {
+          return setErrors({ general: 'Липсва валидна сесия от сървъра.' })
+        }
+        localStorage.setItem('user', JSON.stringify(res.data.user))
+        localStorage.setItem('sessionId', res.data.sessionId)
         setSuccessMsg('✅ Успешен вход! Пренасочване...')
         setTimeout(() => navigate('/home'), 500)
       }
@@ -62,7 +68,13 @@ export default function LoginPage() {
         password: registerData.password
       })
       if (res.data.success) {
-        setSuccessMsg('✅ Регистрацията е успешна! Пренасочване...')
+        console.log('Registration successful:', res.data)
+        if (!res.data.sessionId) {
+          return setErrors({ general: 'Липсва валидна сесия от сървъра.' })
+        }
+        localStorage.setItem('user', JSON.stringify({ username: registerData.name }))
+        localStorage.setItem('sessionId', res.data.sessionId)
+        setSuccessMsg('✅ Регистрацията е успешна! Влизане...')
         setTimeout(() => navigate('/home'), 1500)
       }
     } catch (err) {
