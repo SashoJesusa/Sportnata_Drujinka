@@ -299,6 +299,10 @@ app.post('/posts', async (req, res) => {
         const { title, text, category } = req.body;
         const sessionId = req.headers['x-session-id'];
 
+        if (!title || !text || !category) {
+            return res.status(400).json({ error: "Липсват задължителни полета: title, text, category" });
+        }
+
         const { data: session, error: sessionError } = await supabase
             .from('sessions')
             .select('user_id')
@@ -314,11 +318,14 @@ app.post('/posts', async (req, res) => {
             .insert([{ title, text, category, author_id: session.user_id }])
             .select();
 
-        if (postError) throw postError;
+        if (postError) {
+            console.error('Post creation error:', postError);
+            return res.status(400).json({ error: postError.message || "Грешка при създаване на пост" });
+        }
 
         res.status(201).json({ success: true, post: post[0] });
     } catch (err) {
-        console.error(err);
+        console.error('Unexpected error creating post:', err);
         res.status(500).json({ error: "Грешка при създаване на пост" });
     }
 });

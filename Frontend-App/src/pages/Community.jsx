@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { buildApiUrl } from '../config/api'
 import '../styles/Community.css'
 
 const CATEGORIES = ['Всички', 'Въпроси', 'Съвети', 'Опит', 'Рецепти', 'Друго']
@@ -25,7 +26,7 @@ export default function Community() {
   const loadPosts = async () => {
     try {
       setError('')
-      const response = await axios.get('http://localhost:4000/posts')
+      const response = await axios.get(buildApiUrl('/posts'))
       setPosts(response.data?.posts || [])
     } catch (err) {
       setError(err?.response?.data?.error || 'Не успяхме да заредим постовете.')
@@ -53,7 +54,7 @@ export default function Community() {
       setActionError('')
       setReplyingPostId(postId)
       await axios.post(
-        `http://localhost:4000/posts/${postId}/replies`,
+        buildApiUrl(`/posts/${postId}/replies`),
         { text: replyText.trim() },
         { headers: { 'X-Session-Id': sessionId } }
       )
@@ -87,7 +88,7 @@ export default function Community() {
       setActionError('')
       setIsSubmittingPost(true)
       await axios.post(
-        'http://localhost:4000/posts',
+        buildApiUrl('/posts'),
         {
           title: newPost.title.trim(),
           text: newPost.body.trim(),
