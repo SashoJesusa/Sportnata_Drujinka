@@ -169,6 +169,22 @@
   color: var(--text-main);
 }
 
+.ap-back-link {
+  margin-top: 6px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.ap-back-link:hover {
+  color: var(--green-mid);
+}
+
 @media (max-width: 500px) {
   .ap-form { padding: 20px; }
   .ap-actions { flex-direction: column-reverse; }

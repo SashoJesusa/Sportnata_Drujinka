@@ -205,6 +205,10 @@ export default function AddProduct() {
             <span>🌿</span> Публикувай
           </button>
         </div>
+
+        <button type="button" className="ap-back-link" onClick={() => navigate("/home")}>
+          ← Обратно към сайта
+        </button>
       </form>
     </div>
   );
