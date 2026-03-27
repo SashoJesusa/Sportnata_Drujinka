@@ -133,5 +133,32 @@ app.post('/add-product', upload.single('image'), async (req, res) => {
     }
 });
 
+app.get('/my-products', async (req, res) => {
+    try {
+        const sessionId = req.headers['x-session-id'];
+        const { data: session, error: sessionError } = await supabase
+            .from('sessions')
+            .select('user_id')
+            .eq('session_id', sessionId)
+            .single();
+
+        if (sessionError || !session) {
+            return res.status(401).json({ error: "Сесията е невалидна" });
+        }
+
+        const { data: products, error: productError } = await supabase
+            .from('products')
+            .select('*')
+            .eq('user_id', session.user_id);
+
+        if (productError) throw productError;
+
+        res.status(200).json({ success: true, products });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при извличане на обявите" });
+    }
+});
+
 
 app.listen(4000, () => console.log("🚀 Сървър: http://localhost:4000"));
