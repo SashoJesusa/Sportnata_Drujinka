@@ -45,35 +45,12 @@ const mockPosts = [
 export default function Community() {
   const [category, setCategory] = useState('Всички')
   const [posts, setPosts] = useState(mockPosts)
-  const [likedPosts, setLikedPosts] = useState({})
-  const [likedReplies, setLikedReplies] = useState({})
   const [openPost, setOpenPost] = useState(null)
   const [replyText, setReplyText] = useState('')
   const [showNewPost, setShowNewPost] = useState(false)
   const [newPost, setNewPost] = useState({ title: '', body: '', category: 'Въпроси' })
 
   const filtered = posts.filter(p => category === 'Всички' || p.category === category)
-
-  const toggleLikePost = (id) => {
-    setLikedPosts(prev => ({ ...prev, [id]: !prev[id] }))
-    setPosts(prev => prev.map(p => p.id === id
-      ? { ...p, likes: likedPosts[id] ? p.likes - 1 : p.likes + 1 }
-      : p
-    ))
-  }
-
-  const toggleLikeReply = (postId, replyIdx) => {
-    const key = `${postId}-${replyIdx}`
-    setLikedReplies(prev => ({ ...prev, [key]: !prev[key] }))
-    setPosts(prev => prev.map(p => {
-      if (p.id !== postId) return p
-      const replies = p.replies.map((r, i) => i === replyIdx
-        ? { ...r, likes: likedReplies[key] ? r.likes - 1 : r.likes + 1 }
-        : r
-      )
-      return { ...p, replies }
-    }))
-  }
 
   const submitReply = (postId) => {
     if (!replyText.trim()) return
@@ -135,9 +112,6 @@ export default function Community() {
               <h3 className="post-title">{post.title}</h3>
               <p className="post-body">{post.body}</p>
               <div className="post-actions" onClick={e => e.stopPropagation()}>
-                <button className={`action-btn ${likedPosts[post.id] ? 'liked' : ''}`} onClick={() => toggleLikePost(post.id)}>
-                  ❤️ {post.likes}
-                </button>
                 <button className="action-btn" onClick={() => setOpenPost(post.id)}>
                   💬 {post.answers} отговора
                 </button>
@@ -168,11 +142,6 @@ export default function Community() {
             </div>
             <h2 className="modal-post-title">{activePost.title}</h2>
             <p className="modal-post-body">{activePost.body}</p>
-            <div className="modal-like-row">
-              <button className={`action-btn ${likedPosts[activePost.id] ? 'liked' : ''}`} onClick={() => toggleLikePost(activePost.id)}>
-                ❤️ {activePost.likes}
-              </button>
-            </div>
 
             {/* REPLIES */}
             <div className="replies-section">
@@ -183,10 +152,6 @@ export default function Community() {
                   <div className="reply-content">
                     <span className="reply-author">{r.author}</span>
                     <p className="reply-text">{r.text}</p>
-                    <button
-                      className={`action-btn small ${likedReplies[`${activePost.id}-${i}`] ? 'liked' : ''}`}
-                      onClick={() => toggleLikeReply(activePost.id, i)}
-                    >❤️ {r.likes}</button>
                   </div>
                 </div>
               ))}

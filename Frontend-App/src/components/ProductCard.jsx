@@ -18,10 +18,7 @@ export default function ProductCard({ product, onContact }) {
             <span className="card-emoji">{product.emoji}</span>
           )}
           {product.badge && <span className="card-badge">{product.badge}</span>}
-          <button
-            className={`card-like ${liked ? 'liked' : ''}`}
-            onClick={e => { e.preventDefault(); setLiked(!liked) }}
-          >♥</button>
+          
         </div>
       </Link>
       <div className="card-body">
