@@ -48,14 +48,30 @@ app.post('/register', async (req, res) => {
         const { username, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const { data, error } = await supabase
+        const { data: newUser, error: insertError } = await supabase
             .from('profiles')
             .insert([{ username, email, password: hashedPassword }])
             .select();
 
-        if (error) return res.status(400).json({ error: error.message });
-        res.status(201).json({ success: true });
+        if (insertError) return res.status(400).json({ error: insertError.message });
+
+        const user = newUser[0];
+
+        // Create session for new user
+        const { data: sessionData, error: sessionError } = await supabase
+            .from('sessions')
+            .insert([{ user_id: user.user_id, expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) }])
+            .select();
+
+        if (sessionError) return res.status(400).json({ error: sessionError.message });
+        
+        return res.status(201).json({ 
+            success: true, 
+            user: { username: user.username },
+            sessionId: sessionData[0].session_id
+        });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Грешка в сървъра" });
     }
 });
