@@ -1,5 +1,8 @@
 .product-details-container {
-  background: #faf7f2;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(134, 239, 172, 0.3), transparent 30%),
+    radial-gradient(circle at 86% 10%, rgba(125, 211, 252, 0.24), transparent 30%),
+    linear-gradient(145deg, #edf8f2 0%, #f7f3eb 58%, #edf5fa 100%);
   min-height: 100vh;
   font-family: 'Source Serif 4', serif;
 }
@@ -24,7 +27,7 @@
 }
 
 .product-not-found {
-  background: #faf7f2;
+  background: transparent;
   min-height: 100vh;
   text-align: center;
   padding: 80px 20px;
@@ -42,11 +45,13 @@
 }
 
 .product-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.34);
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #ede8e0;
-  box-shadow: 0 2px 16px rgba(44, 24, 16, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  box-shadow: 0 16px 38px rgba(44, 24, 16, 0.13);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   margin-bottom: 28px;
 }
 
@@ -114,8 +119,8 @@
 }
 
 .product-contact-box {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: rgba(240, 253, 244, 0.58);
+  border: 1px solid rgba(187, 247, 208, 0.85);
   border-radius: 10px;
   padding: 16px 20px;
   margin-top: 24px;
@@ -154,10 +159,12 @@
 }
 
 .reviews-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.34);
   border-radius: 16px;
   padding: 28px;
-  border: 1px solid #ede8e0;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .reviews-title {
@@ -189,7 +196,7 @@
 .review-textarea {
   width: 100%;
   padding: 10px 14px;
-  border: 2px solid #ede8e0;
+  border: 1.5px solid rgba(255, 255, 255, 0.58);
   border-radius: 8px;
   font-family: 'Source Serif 4', serif;
   font-size: 14px;
@@ -197,6 +204,7 @@
   resize: vertical;
   margin-bottom: 10px;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .review-textarea:focus {
