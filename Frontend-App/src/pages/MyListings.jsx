@@ -81,7 +81,7 @@ export default function MyListings() {
                 <div className="listing-meta">📍 {p.region} · {p.category}</div>
                 {p.description && <div className="listing-meta">{p.description}</div>}
               </div>
-              <div className="listing-price">{Number(p.price).toFixed(2)} лв</div>
+              <div className="listing-price">{Number(p.price).toFixed(2)} €</div>
               <button onClick={() => alert('Изтриването идва скоро!')} className="btn-delete">Изтрий</button>
             </li>
           ))}
