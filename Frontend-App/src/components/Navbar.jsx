@@ -5,7 +5,7 @@ const ACTION_BUTTONS = {
   '/home': { to: '/add-product', label: '+ Публикувай обява' },
   '/add-product': { to: '/add-product', label: '+ Публикувай обява' },
   '/community': { to: '/community', label: '+ Нов въпрос', action: 'new-post' },
-  '/coalitions': { to: '/coalitions', label: '+ Нова коалиция', action: 'new-coalition' },
+  '/coalitions': { to: '/coalitions', label: '+ Нова кампания', action: 'new-coalition' },
 }
 
 export default function Navbar({ onAction }) {
