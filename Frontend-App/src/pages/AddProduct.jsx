@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/AddProduct.css";
 
 const OBLASTI = [
@@ -24,9 +25,18 @@ const INITIAL_STATE = {
 };
 
 export default function AddProduct() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_STATE);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    const sessionId = localStorage.getItem("sessionId");
+    if (!savedUser || !sessionId) {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -54,6 +64,14 @@ export default function AddProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const savedUser = localStorage.getItem("user");
+    const sessionId = localStorage.getItem("sessionId");
+    if (!savedUser || !sessionId) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
     console.log("Изпратени данни:", { ...form, imageName: imageFile?.name || null });
     alert("Обявата е добавена успешно!");
   };
@@ -90,12 +108,12 @@ export default function AddProduct() {
         </div>
 
         <div className="ap-field">
-          <label className="ap-label">Цена (€)</label>
+          <label className="ap-label">Цена (€)/кг</label>
           <input 
             className="ap-input" 
             name="price" 
             type="number" 
-            min="0" 
+            min="0.01" 
             step="0.01" 
             value={form.price} 
             onChange={handleChange} 
@@ -128,6 +146,7 @@ export default function AddProduct() {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
+              required
             />
             <span className="ap-upload-text">📷 Качи снимка (JPG, PNG, WEBP)</span>
           </label>
@@ -147,7 +166,8 @@ export default function AddProduct() {
             value={form.description} 
             onChange={handleChange} 
             placeholder="Опишете продукта..." 
-            rows={5} 
+            rows={5}
+            required
           />
         </div>
 
