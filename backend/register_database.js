@@ -72,10 +72,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// ==========================================
-// --- СНИМКИ (Твоят код) ---
-// ==========================================
-
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() }); // Пазим снимката временно в RAM
 
@@ -101,12 +97,26 @@ app.post('/add-product', upload.single('image'), async (req, res) => {
             .getPublicUrl(fileName);
 
         const imageUrl = urlData.publicUrl;
+        const sessionId = req.headers['x-session-id'];
+        const { data: session, error: sessionError } = await supabase
+            .from('sessions')
+            .select('user_id')
+            .eq('session_id', sessionId)
+            .single();
+
+        if (sessionError || !session){
+            console.error("Session error:", sessionError);
+            return res.status(401).json({ error: "Сесията е невалидна" });
+        }
+
+        const userId = session.user_id;
 
         // 2. Запис на данните в таблица 'products'
         const { data: productData, error: productError } = await supabase
             .from('products')
             .insert([{ 
                 product: name, 
+                user_id: userId,
                 category, 
                 price: parseFloat(price), 
                 region: oblast, 

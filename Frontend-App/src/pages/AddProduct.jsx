@@ -75,8 +75,12 @@ export default function AddProduct() {
     formData.append("image", imageFile); // Самото име на променливата 'image' трябва да съвпада с upload.single('image') в backend-а
 
     try {
+        const myHeaders = new Headers();
+        myHeaders.append("X-Session-Id", localStorage.getItem("sessionId") || "tttt");
+
         const response = await fetch("http://localhost:4000/add-product", {
             method: "POST",
+            headers: myHeaders,
             body: formData, // Важно: Не слагай Headers за JSON, браузърът сам ще сложи нужния Boundary
         });
 
