@@ -64,6 +64,12 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const sessionId = localStorage.getItem("sessionId");
+    if (!sessionId) {
+      navigate("/login", { replace: true });
+      return;
+    }
     
     // Създаваме FormData обект
     const formData = new FormData();
@@ -76,7 +82,7 @@ export default function AddProduct() {
 
     try {
         const myHeaders = new Headers();
-        myHeaders.append("X-Session-Id", localStorage.getItem("sessionId") || "tttt");
+      myHeaders.append("X-Session-Id", sessionId);
 
         const response = await fetch("http://localhost:4000/add-product", {
             method: "POST",
