@@ -9,6 +9,7 @@ export default function MyListings() {
   const [loading, setLoading] = useState(true)
   const [myProducts, setMyProducts] = useState([])
   const [error, setError] = useState('')
+  const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
@@ -36,6 +37,7 @@ export default function MyListings() {
           navigate('/login')
           return
         }
+        const message = err?.response?.data?.error || 'Не успяхме да заредим твоите обяви.'
         setError(message)
       } finally {
         setLoading(false)
@@ -44,6 +46,48 @@ export default function MyListings() {
 
     loadMyListings()
   }, [navigate])
+
+  const handleDeleteListing = async (listingId) => {
+    const sessionId = localStorage.getItem('sessionId')
+    if (!sessionId) {
+      navigate('/login')
+      return
+    }
+
+    const confirmed = window.confirm('Сигурен ли си, че искаш да изтриеш тази обява?')
+    if (!confirmed) return
+
+    try {
+      setDeletingId(listingId)
+      await axios.delete(`http://localhost:4000/products/${listingId}`, {
+        headers: {
+          'X-Session-Id': sessionId,
+        },
+      })
+
+      setMyProducts((prev) => prev.filter((p) => {
+        const productId = p.offer_id ?? p.id ?? p.product_id ?? p.productId ?? null
+        return Number(productId) !== Number(listingId)
+      }))
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        localStorage.removeItem('user')
+        localStorage.removeItem('sessionId')
+        navigate('/login')
+        return
+      }
+
+      if (err?.response?.status === 404) {
+        alert('Delete endpoint не е намерен (404). Рестартирай backend сървъра и пробвай пак.')
+        return
+      }
+
+      const message = err?.response?.data?.error || 'Не успяхме да изтрием обявата.'
+      alert(message)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) return <div className="my-listings-state">Зареждане на обявите...</div>
   return (
@@ -68,7 +112,7 @@ export default function MyListings() {
             </li>
           )}
           {myProducts.map(p => (
-            <li key={p.id} className="listing-item">
+            <li key={p.offer_id ?? p.id} className="listing-item">
               <div className="listing-emoji">
                 {p.image_url ? (
                   <img src={p.image_url} alt={p.product} className="listing-image" />
@@ -82,7 +126,13 @@ export default function MyListings() {
                 {p.description && <div className="listing-meta">{p.description}</div>}
               </div>
               <div className="listing-price">{Number(p.price).toFixed(2)} €</div>
-              <button onClick={() => alert('Изтриването идва скоро!')} className="btn-delete">Изтрий</button>
+              <button
+                onClick={() => handleDeleteListing(p.offer_id ?? p.id)}
+                className="btn-delete"
+                disabled={deletingId === (p.offer_id ?? p.id)}
+              >
+                {deletingId === (p.offer_id ?? p.id) ? 'Изтриване...' : 'Изтрий'}
+              </button>
             </li>
           ))}
         </ul>
