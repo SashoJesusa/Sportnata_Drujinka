@@ -29,7 +29,7 @@ export default function ProductCard({ product, onContact }) {
           <Link to={productLink} className="card-title-link">
             <h3 className="card-title">{product.name}</h3>
           </Link>
-          <span className="card-price">{product.price.toFixed(2)} лв/{product.unit}</span>
+          <span className="card-price">{product.price.toFixed(2)} €/{product.unit}</span>
         </div>
         <p className="card-meta">👨‍🌾 {product.farmer} · 📍 {product.village}</p>
         <div className="card-rating">
