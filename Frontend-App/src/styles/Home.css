@@ -111,3 +111,55 @@
 .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
 .btn-send { flex: 1; background: #15803d; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; font-family: 'Source Serif 4', serif; }
 .btn-cancel { flex: 1; background: #f3f4f6; color: #374151; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; font-family: 'Source Serif 4', serif; }
+
+/* LOGIN NOTICE */
+.login-notice-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 24, 35, 0.4);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-notice-modal {
+  width: 100%;
+  max-width: 380px;
+  border-radius: 14px;
+  padding: 22px 20px;
+  background: linear-gradient(165deg, rgba(236, 253, 245, 0.96) 0%, rgba(209, 250, 229, 0.94) 100%);
+  border: 1px solid #86efac;
+  box-shadow: 0 18px 42px rgba(21, 128, 61, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.login-notice-modal h3 {
+  margin: 0 0 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #14532d;
+}
+
+.login-notice-modal p {
+  margin: 0 0 16px;
+  color: #166534;
+  font-size: 14px;
+}
+
+.login-notice-btn {
+  border: none;
+  border-radius: 10px;
+  background: #15803d;
+  color: #fff;
+  font-family: 'Source Serif 4', serif;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.login-notice-btn:hover {
+  background: #166534;
+}

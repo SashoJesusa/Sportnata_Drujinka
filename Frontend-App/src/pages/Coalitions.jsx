@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import '../styles/Coalitions.css'
 
@@ -101,6 +102,8 @@ const mockCoalitions = [
 const CATEGORIES = ['Всички', 'Зеленчуци', 'Плодове', 'Млечни', 'Пчелни продукти', 'Птицевъдство']
 
 export default function Coalitions() {
+  const navigate = useNavigate()
+  const [showLoginNotice, setShowLoginNotice] = useState(false)
   const [category, setCategory] = useState('Всички')
   const [coalitions, setCoalitions] = useState(mockCoalitions)
   const [joinedMap, setJoinedMap] = useState({})
@@ -115,6 +118,15 @@ export default function Coalitions() {
 
   const filtered = coalitions.filter(c => category === 'Всички' || c.category === category)
   const getProgress = (c) => Math.min(100, Math.round((c.currentQty / c.targetQty) * 100))
+  const handleFooterLoginClick = (e) => {
+    const savedUser = localStorage.getItem('user')
+    const sessionId = localStorage.getItem('sessionId')
+
+    if (savedUser && sessionId) {
+      e.preventDefault()
+      setShowLoginNotice(true)
+    }
+  }
 
   const handleJoin = (coalitionId) => {
     const qty = Number(joinForm.qty)
@@ -165,7 +177,7 @@ export default function Coalitions() {
             <div className="hero-stats-row">
               <div className="hero-stat"><span>3×</span><small>по-висока цена</small></div>
               <div className="hero-stat"><span>120+</span><small>фермери в мрежата</small></div>
-              <div className="hero-stat"><span>8</span><small>активни коалиции</small></div>
+              <div className="hero-stat"><span>4</span><small>активни кампании</small></div>
             </div>
           </div>
         </div>
@@ -204,12 +216,12 @@ export default function Coalitions() {
                     <div className="coalition-prices">
                       <div className="price-block">
                         <span className="price-lbl">Коалиционна цена</span>
-                        <span className="price-big green">{coal.pricePerUnit.toFixed(2)} лв/{coal.unit}</span>
+                        <span className="price-big green">{coal.pricePerUnit.toFixed(2)} €/{coal.unit}</span>
                       </div>
                       <div className="price-divider">vs</div>
                       <div className="price-block">
                         <span className="price-lbl">Цена на посредник</span>
-                        <span className="price-big red">{coal.retailPrice.toFixed(2)} лв/{coal.unit}</span>
+                        <span className="price-big red">{coal.retailPrice.toFixed(2)} €/{coal.unit}</span>
                       </div>
                     </div>
                     <div className="coalition-farmers-count">
@@ -268,12 +280,12 @@ export default function Coalitions() {
               <div className="modal-prices">
                 <div className="price-block">
                   <span className="price-lbl">Коалиционна цена</span>
-                  <span className="price-big green">{activeCoalition.pricePerUnit.toFixed(2)} лв/{activeCoalition.unit}</span>
+                  <span className="price-big green">{activeCoalition.pricePerUnit.toFixed(2)} €/{activeCoalition.unit}</span>
                 </div>
                 <div className="price-divider">vs</div>
                 <div className="price-block">
                   <span className="price-lbl">Цена на посредник</span>
-                  <span className="price-big red">{activeCoalition.retailPrice.toFixed(2)} лв/{activeCoalition.unit}</span>
+                  <span className="price-big red">{activeCoalition.retailPrice.toFixed(2)} €/{activeCoalition.unit}</span>
                 </div>
               </div>
 
@@ -344,13 +356,45 @@ export default function Coalitions() {
                 </div>
               </div>
               <div className="form-row-two">
-                <div className="form-group"><label>Очаквана цена (лв)</label><input className="form-input" type="number" step="0.01" placeholder="1.80" value={newCoalition.pricePerUnit} onChange={e => setNewCoalition({ ...newCoalition, pricePerUnit: e.target.value })} /></div>
+                <div className="form-group"><label>Очаквана цена (€)</label><input className="form-input" type="number" step="0.01" placeholder="1.80" value={newCoalition.pricePerUnit} onChange={e => setNewCoalition({ ...newCoalition, pricePerUnit: e.target.value })} /></div>
                 <div className="form-group"><label>Краен срок</label><input className="form-input" type="date" value={newCoalition.deadline} onChange={e => setNewCoalition({ ...newCoalition, deadline: e.target.value })} /></div>
               </div>
               <div className="form-group"><label>Купувач</label><input className="form-input" placeholder="напр. Kaufland, Метро..." value={newCoalition.buyer} onChange={e => setNewCoalition({ ...newCoalition, buyer: e.target.value })} /></div>
               <div className="form-group"><label>Описание</label><textarea className="form-textarea" rows={3} placeholder="Опиши коалицията..." value={newCoalition.description} onChange={e => setNewCoalition({ ...newCoalition, description: e.target.value })} /></div>
               <button className="btn-create-submit" onClick={handleCreate}>🤝 Публикувай коалицията</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      <footer className="footer" id="site-footer">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-brand">🌾 AgroHub</div>
+            <p className="footer-desc">Платформа за директна продажба от малки фермери в България.</p>
+          </div>
+          <div>
+            <h4 className="footer-heading">Навигация</h4>
+            <div className="footer-links">
+              <Link to="/add-product">Продай продукт</Link>
+              <Link to="/my-listings">Мои обяви</Link>
+              <Link to="/login" onClick={handleFooterLoginClick}>Вход</Link>
+            </div>
+          </div>
+          <div>
+            <h4 className="footer-heading">Контакт</h4>
+            <p className="footer-contact">📧 info@agrohub.bg<br />📞 +359 87 456 7898<br /></p>
+          </div>
+        </div>
+        <div className="footer-bottom">© 2026 AgroHub · Всички права запазени 🌾</div>
+      </footer>
+
+      {showLoginNotice && (
+        <div className="login-notice-overlay" onClick={() => setShowLoginNotice(false)}>
+          <div className="login-notice-modal" onClick={e => e.stopPropagation()}>
+            <h3>✅ Вече си логнат</h3>
+            <p>Нямаш нужда да влизаш отново.</p>
+            <button className="login-notice-btn" onClick={() => setShowLoginNotice(false)}>Разбрах</button>
           </div>
         </div>
       )}

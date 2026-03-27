@@ -85,10 +85,10 @@
 .card-like.liked { color: #ef4444; }
 
 .card-body {
-  padding: 16px;
+  padding: 22px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
 }
 

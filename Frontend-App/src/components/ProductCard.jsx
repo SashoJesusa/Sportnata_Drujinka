@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './ProductCard.css'
 
-export default function ProductCard({ product, onContact }) {
-  const [liked, setLiked] = useState(false)
+export default function ProductCard({ product }) {
   if (!product) return null
   const productLink = `/products/${encodeURIComponent(String(product.id))}`
   const hasImage = Boolean(product.imageUrl)
@@ -29,10 +27,6 @@ export default function ProductCard({ product, onContact }) {
           <span className="card-price">{product.price.toFixed(2)} €/{product.unit}</span>
         </div>
         <p className="card-meta">👨‍🌾 {product.farmer} · 📍 {product.village}</p>
-        <div className="card-rating">
-          <span className="stars">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
-          <span className="rating-num">{product.rating} ({product.reviews} отзива)</span>
-        </div>
         <div className="card-actions">
           <Link to={productLink} className="btn-details">Виж детайли</Link>
           

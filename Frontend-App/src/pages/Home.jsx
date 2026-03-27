@@ -32,11 +32,28 @@ export default function Home() {
   const [category, setCategory] = useState('Всички')
   const [contactProduct, setContactProduct] = useState(null)
   const [toast, setToast] = useState(null)
+  const [showLoginNotice, setShowLoginNotice] = useState(false)
   const [products, setProducts] = useState([])
   const [isLoadingProducts, setIsLoadingProducts] = useState(true)
   const [productsError, setProductsError] = useState('')
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
+  const handleFooterLoginClick = (e) => {
+    const savedUser = localStorage.getItem('user')
+    const sessionId = localStorage.getItem('sessionId')
+
+    if (savedUser && sessionId) {
+      e.preventDefault()
+      setShowLoginNotice(true)
+    }
+  }
+
+  const scrollToProducts = () => {
+    const section = document.getElementById('products')
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
 
   useEffect(() => {
     if (location.hash === '#site-footer') {
@@ -106,7 +123,6 @@ export default function Home() {
       reviews: 0,
       emoji: CATEGORY_EMOJI[normalizedCategory] || '🌾',
       category: normalizedCategory,
-      badge: 'Нова обява',
       description: p.description || 'Свежа фермерска продукция.',
       phone: p.phone || 'Свържете се чрез платформата',
       imageUrl: p.image_url || null,
@@ -138,7 +154,7 @@ export default function Home() {
           <p className="hero-subtitle">Намери местни земеделци и купи директно — без посредници.</p>
           <div className="hero-search">
             <input className="hero-search-input" placeholder="Търси фермерски продукти" value={search} onChange={e => setSearch(e.target.value)} />
-            <button className="hero-search-btn">🔍 Търси</button>
+            <button className="hero-search-btn" onClick={scrollToProducts}>🔍 Търси</button>
           </div>
         </div>
       </section>
@@ -146,8 +162,8 @@ export default function Home() {
       {/* CATEGORY CARDS */}
       <section className="cat-cards-section">
         {[
-          { label: 'Местна Продукция', img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80', cat: 'Пчелни продукти' },
-          { label: 'Млечни продукти', img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=300&q=80', cat: 'Млечни' },
+          { label: 'Зъренени храни', img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80', cat: 'Зърнени храни' },
+          { label: 'Млечни продукти', img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=300&q=80', cat: 'Млечни продукти' },
           { label: 'Плодове', img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=300&q=80', cat: 'Плодове' },
           { label: 'Зеленчуци', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&q=80', cat: 'Зеленчуци' },
         ].map(c => (
@@ -207,10 +223,9 @@ export default function Home() {
           <div>
             <h4 className="footer-heading">Навигация</h4>
             <div className="footer-links">
-              <Link to="/home">Продукти</Link>
               <Link to="/add-product">Продай продукт</Link>
               <Link to="/my-listings">Мои обяви</Link>
-              <Link to="/login">Вход</Link>
+              <Link to="/login" onClick={handleFooterLoginClick}>Вход</Link>
             </div>
           </div>
           <div>
@@ -220,6 +235,16 @@ export default function Home() {
         </div>
         <div className="footer-bottom">© 2026 AgroHub · Всички права запазени 🌾</div>
       </footer>
+
+      {showLoginNotice && (
+        <div className="login-notice-overlay" onClick={() => setShowLoginNotice(false)}>
+          <div className="login-notice-modal" onClick={e => e.stopPropagation()}>
+            <h3>✅ Вече си логнат</h3>
+            <p>Нямаш нужда да влизаш отново.</p>
+            <button className="login-notice-btn" onClick={() => setShowLoginNotice(false)}>Разбрах</button>
+          </div>
+        </div>
+      )}
 
       {/* CONTACT MODAL */}
       {contactProduct && (

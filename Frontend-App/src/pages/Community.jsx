@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { buildApiUrl } from '../config/api'
 import '../styles/Community.css'
@@ -9,6 +9,7 @@ const CATEGORIES = ['Всички', 'Въпроси', 'Съвети', 'Опит'
 
 export default function Community() {
   const navigate = useNavigate()
+  const [showLoginNotice, setShowLoginNotice] = useState(false)
   const [category, setCategory] = useState('Всички')
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -22,6 +23,15 @@ export default function Community() {
   const [newPost, setNewPost] = useState({ title: '', body: '', category: 'Въпроси' })
 
   const getSessionId = () => localStorage.getItem('sessionId')
+  const handleFooterLoginClick = (e) => {
+    const savedUser = localStorage.getItem('user')
+    const sessionId = localStorage.getItem('sessionId')
+
+    if (savedUser && sessionId) {
+      e.preventDefault()
+      setShowLoginNotice(true)
+    }
+  }
 
   const loadPosts = async () => {
     try {
@@ -127,7 +137,6 @@ export default function Community() {
             <h1>🌿 Общност</h1>
             <p>Споделяй опит, задавай въпроси и помагай на другите фермери</p>
           </div>
-          <button className="btn-new-post" onClick={() => setShowNewPost(true)}>+ Нов пост</button>
         </div>
 
         {actionError && <div className="community-error">{actionError}</div>}
@@ -154,7 +163,6 @@ export default function Community() {
                 <span className="post-avatar">🌾</span>
                 <div className="post-meta">
                   <span className="post-author">{post.username || 'Анонимен потребител'}</span>
-                  <span className="post-time">Пост #{post.id}</span>
                 </div>
                 <span className="post-category-badge">{post.category}</span>
               </div>
@@ -185,7 +193,6 @@ export default function Community() {
               <span className="post-avatar">🌾</span>
               <div>
                 <span className="post-author">{activePost.username || 'Анонимен потребител'}</span>
-                <span className="post-time"> · Пост #{activePost.id}</span>
               </div>
               <span className="post-category-badge">{activePost.category}</span>
             </div>
@@ -231,7 +238,7 @@ export default function Community() {
       {/* NEW POST MODAL */}
       {showNewPost && (
         <div className="modal-overlay" onClick={() => setShowNewPost(false)}>
-          <div className="modal-community" onClick={e => e.stopPropagation()}>
+          <div className="modal-community new-post-modal" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowNewPost(false)}>✕</button>
             <h2 className="modal-post-title">✍️ Нов пост</h2>
             <div className="form-group">
@@ -246,11 +253,43 @@ export default function Community() {
             </div>
             <div className="form-group">
               <label>Съдържание</label>
-              <textarea className="reply-textarea" rows={5} placeholder="Опиши въпроса или опита си подробно..." value={newPost.body} onChange={e => setNewPost({ ...newPost, body: e.target.value })} />
+              <textarea className="reply-textarea new-post-textarea" rows={5} placeholder="Опиши въпроса или опита си подробно..." value={newPost.body} onChange={e => setNewPost({ ...newPost, body: e.target.value })} />
             </div>
             <button className="btn-reply" onClick={submitNewPost} disabled={isSubmittingPost}>
               {isSubmittingPost ? 'Публикуване...' : 'Публикувай'}
             </button>
+          </div>
+        </div>
+      )}
+
+      <footer className="footer" id="site-footer">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-brand">🌾 AgroHub</div>
+            <p className="footer-desc">Платформа за директна продажба от малки фермери в България.</p>
+          </div>
+          <div>
+            <h4 className="footer-heading">Навигация</h4>
+            <div className="footer-links">
+              <Link to="/add-product">Продай продукт</Link>
+              <Link to="/my-listings">Мои обяви</Link>
+              <Link to="/login" onClick={handleFooterLoginClick}>Вход</Link>
+            </div>
+          </div>
+          <div>
+            <h4 className="footer-heading">Контакт</h4>
+            <p className="footer-contact">📧 info@agrohub.bg<br />📞 +359 87 456 7898<br /></p>
+          </div>
+        </div>
+        <div className="footer-bottom">© 2026 AgroHub · Всички права запазени 🌾</div>
+      </footer>
+
+      {showLoginNotice && (
+        <div className="login-notice-overlay" onClick={() => setShowLoginNotice(false)}>
+          <div className="login-notice-modal" onClick={e => e.stopPropagation()}>
+            <h3>✅ Вече си логнат</h3>
+            <p>Нямаш нужда да влизаш отново.</p>
+            <button className="login-notice-btn" onClick={() => setShowLoginNotice(false)}>Разбрах</button>
           </div>
         </div>
       )}

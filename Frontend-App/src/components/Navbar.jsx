@@ -1,16 +1,18 @@
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './Navbar.css'
 
 const ACTION_BUTTONS = {
   '/home': { to: '/add-product', label: '+ Публикувай обява' },
   '/add-product': { to: '/add-product', label: '+ Публикувай обява' },
-  '/community': { to: '/community', label: '+ Нов въпрос', action: 'new-post' },
-  '/coalitions': { to: '/coalitions', label: '+ Нова коалиция', action: 'new-coalition' },
+  '/community': { to: '/community', label: '+ Нов пост', action: 'new-post' },
+  '/coalitions': { to: '/coalitions', label: '+ Нова кампания', action: 'new-coalition' },
 }
 
 export default function Navbar({ onAction }) {
   const location = useLocation()
   const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const path = location.pathname
   const hash = location.hash
   const savedUser = localStorage.getItem('user')
@@ -38,14 +40,15 @@ export default function Navbar({ onAction }) {
   const handleAboutClick = (e) => {
     e.preventDefault()
 
-    if (path !== '/home') {
-      navigate('/home#site-footer')
-      return
-    }
-
     const footer = document.getElementById('site-footer')
     if (footer) {
       footer.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+
+    if (path !== '/home') {
+      navigate('/home#site-footer')
+      return
     }
   }
 
@@ -63,6 +66,8 @@ export default function Navbar({ onAction }) {
   const isAboutActive = path === '/home' && hash === '#site-footer'
 
   const btn = ACTION_BUTTONS[path] || ACTION_BUTTONS['/home']
+
+  const closeMobileMenu = () => setIsMenuOpen(false)
 
   return (
     <header className="header">
@@ -85,19 +90,35 @@ export default function Navbar({ onAction }) {
           <span className="brand-icon">🌿</span>
           <span className="brand-name">AgroHub</span>
         </Link>
-        <div className="navbar-links">
-          <Link to="/home" onClick={handleHomeClick} className={`nav-link ${isHomeActive ? 'active' : ''}`}>Начало</Link>
-          <Link to="/community" className={`nav-link ${path === '/community' ? 'active' : ''}`}>Форум</Link>
-          <Link to="/coalitions" className={`nav-link ${path === '/coalitions' ? 'active' : ''}`}>Кампании</Link>
-          <Link to="/home#site-footer" className={`nav-link ${isAboutActive ? 'active' : ''}`} onClick={handleAboutClick}>За Нас</Link>
+
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-label="Отвори меню"
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+        >
+          <span className="navbar-toggle-bar" />
+          <span className="navbar-toggle-bar" />
+          <span className="navbar-toggle-bar" />
+        </button>
+
+        <div className={`navbar-menu ${isMenuOpen ? 'open' : ''}`}>
+          <div className="navbar-links">
+            <Link to="/home" onClick={(e) => { handleHomeClick(e); closeMobileMenu() }} className={`nav-link ${isHomeActive ? 'active' : ''}`}>Начало</Link>
+            <Link to="/community" onClick={closeMobileMenu} className={`nav-link ${path === '/community' ? 'active' : ''}`}>Форум</Link>
+            <Link to="/coalitions" onClick={closeMobileMenu} className={`nav-link ${path === '/coalitions' ? 'active' : ''}`}>Кампании</Link>
+            <Link to="/home#site-footer" className={`nav-link ${isAboutActive ? 'active' : ''}`} onClick={(e) => { handleAboutClick(e); closeMobileMenu() }}>За Нас</Link>
+          </div>
+
+          {btn.action ? (
+            <button className="btn-sell" onClick={() => { onAction && onAction(btn.action); closeMobileMenu() }}>
+              {btn.label}
+            </button>
+          ) : (
+            <Link to={btn.to} className="btn-sell" onClick={closeMobileMenu}>{btn.label}</Link>
+          )}
         </div>
-        {btn.action ? (
-          <button className="btn-sell" onClick={() => onAction && onAction(btn.action)}>
-            {btn.label}
-          </button>
-        ) : (
-          <Link to={btn.to} className="btn-sell">{btn.label}</Link>
-        )}
       </nav>
     </header>
   )

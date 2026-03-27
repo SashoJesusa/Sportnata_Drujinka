@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
@@ -16,7 +16,6 @@ export default function MyListings() {
     const savedUser = localStorage.getItem('user')
     const sessionId = localStorage.getItem('sessionId')
     
-    // If no user or sessionId, redirect to login
     if (!savedUser || !sessionId) {
       navigate('/login')
       return
@@ -100,7 +99,6 @@ export default function MyListings() {
             <h1>📋 Мои обяви</h1>
             <p>Управлявай своите публикувани продукти</p>
           </div>
-          <Link to="/add-product" className="btn-new-listing">+ Нова обява</Link>
         </div>
         {error && <div className="my-listings-error">{error}</div>}
         <ul className="listings-list">

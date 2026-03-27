@@ -43,11 +43,9 @@ export default function AddProduct() {
   };
 
   const handleReset = () => {
-    if (window.confirm("Сигурни ли сте, че искате да изчистите формата?")) {
-      setForm(INITIAL_STATE);
-      setImageFile(null);
-      setImagePreview("");
-    }
+    setForm(INITIAL_STATE);
+    setImageFile(null);
+    setImagePreview("");
   };
 
   const handleImageChange = (e) => {
@@ -97,7 +95,7 @@ export default function AddProduct() {
         } else {
             alert("Грешка: " + result.error);
         }
-    } catch (error) {
+    } catch {
         alert("Неуспешна връзка със сървъра.");
     }
 };
