@@ -1,20 +1,36 @@
 .login-page-container {
-  background: linear-gradient(135deg, #1a4731, #15803d);
+  background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=85');
+  background-size: cover;
+  background-position: center 40%;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   font-family: 'Source Serif 4', serif;
+  position: relative;
+}
+
+.login-page-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.42), rgba(21, 128, 61, 0.18));
 }
 
 .login-card {
-  background: white;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.28);
   border-radius: 20px;
   padding: 44px;
   max-width: 420px;
   width: 100%;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
 }
 
 .login-header {
@@ -30,12 +46,14 @@
 .login-title {
   font-family: 'Playfair Display', serif;
   font-size: 26px;
-  color: #2c1810;
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
 .login-tabs {
   display: flex;
-  border: 2px solid #ede8e0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 28px;
@@ -46,7 +64,7 @@
   padding: 10px;
   border: none;
   background: transparent;
-  color: #78716c;
+  color: #f3f4f6;
   font-family: 'Source Serif 4', serif;
   font-size: 15px;
   cursor: pointer;
@@ -65,26 +83,31 @@
 .form-label {
   display: block;
   font-size: 13px;
-  color: #78716c;
+  color: #f9fafb;
   margin-bottom: 5px;
 }
 
 .form-input {
   width: 100%;
   padding: 11px 14px;
-  border: 2px solid #ede8e0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 8px;
   font-family: 'Source Serif 4', serif;
   font-size: 15px;
-  color: #2c1810;
+  color: #ffffff;
   outline: none;
-  background: #fdfaf6;
+  background: rgba(255, 255, 255, 0.18);
   box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .form-input:focus {
-  border-color: #15803d;
+  border-color: #86efac;
+  background: rgba(255, 255, 255, 0.24);
 }
 
 .form-input.error {
@@ -118,7 +141,7 @@
   display: block;
   text-align: center;
   margin-top: 20px;
-  color: #78716c;
+  color: #e5e7eb;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s ease;
