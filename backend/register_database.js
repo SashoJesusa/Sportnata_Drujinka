@@ -228,5 +228,56 @@ app.get('/products/:id', async (req, res) => {
     }
 });
 
+app.delete('/products/:id', async (req, res) => {
+    try {
+        const productId = Number(req.params.id);
+        if (Number.isNaN(productId)) {
+            return res.status(400).json({ success: false, error: 'Невалидно ID на продукт.' });
+        }
+
+        const sessionId = req.headers['x-session-id'];
+        const { data: session, error: sessionError } = await supabase
+            .from('sessions')
+            .select('user_id')
+            .eq('session_id', sessionId)
+            .single();
+
+        if (sessionError || !session) {
+            return res.status(401).json({ error: "Сесията е невалидна" });
+        }
+
+        const { data: product, error: fetchError } = await supabase
+            .from('products')
+            .select('user_id, image_url')
+            .eq('offer_id', productId)
+            .single();
+
+        if (fetchError || !product) {
+            return res.status(404).json({ success: false, error: 'Продуктът не е намерен.' });
+        }
+
+        if (product.user_id !== session.user_id) {
+            return res.status(403).json({ error: "Нямаш разрешение да изтриеш това." });
+        }
+
+        if (product.image_url) {
+            const fileName = product.image_url.split('/').pop();
+            await supabase.storage.from('product-images').remove([fileName]);
+        }
+
+        const { error: deleteError } = await supabase
+            .from('products')
+            .delete()
+            .eq('offer_id', productId);
+
+        if (deleteError) throw deleteError;
+
+        res.status(200).json({ success: true, message: "Обявата е изтрита!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Грешка при изтриване на обявата" });
+    }
+});
+
 
 app.listen(4000, () => console.log("Сървър: http://localhost:4000"));
